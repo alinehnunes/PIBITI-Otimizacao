@@ -7,7 +7,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget
 from BaseDados import Basedados
-from ParametrosOtimizacao import ParametrosOtimizacao
+from ParametrosOtimizacao import Otimizacao, Parametro, Variedade
+
+teste1 = Otimizacao()
 
 class PageWindow(QWidget):
     gotoSignal = QtCore.pyqtSignal(str)
@@ -49,9 +51,13 @@ class Selecaoparametros(PageWindow):
     def checarselecionados(self):
         selecionados = []
         for botao in self.listabotoes:
+            param = Parametro(botao.text())
             if botao.checkState():
                 selecionados.append(botao)
-        print(selecionados)
+                teste1.addparametro(param)
+        for i in range(len(teste1.parametros)):
+            print(teste1.parametros[i].nome)
+
 
     def goToLimiteParametros(self):
         self.goto("LimiteParametros")
@@ -144,7 +150,9 @@ class Simulacao(QWidget):
         self.goto("SelecaoParametros")
         self.setLayout(self.layout)
 
-        self.parametrosotimizacao = ParametrosOtimizacao
+        #teste1 = Otimizacao
+
+
 
     def register(self, widget, name):
         self.m_pages[name] = widget
@@ -155,9 +163,6 @@ class Simulacao(QWidget):
     @QtCore.pyqtSlot(str)
     def goto(self, name):
         if name in self.m_pages:
-            self.
-
-
             widget = self.m_pages[name]
             self.stacked_widget.setCurrentWidget(widget)
             self.setWindowTitle(widget.windowTitle())

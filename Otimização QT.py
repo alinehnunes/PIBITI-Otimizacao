@@ -5,7 +5,7 @@ from PyQt5 import QtCore
 from Simulacao import Simulacao, PaginaInicial
 from BancodeDados import GraficoParametro
 from HistoricoSimulacao import Historicosimulacao
-from ParametrosOtimizacao import ParametrosOtimizacao
+from ParametrosOtimizacao import Otimizacao
 
 class MainWindow(QMainWindow):
 
@@ -21,7 +21,6 @@ class MainWindow(QMainWindow):
         t = PaginaInicial()
         self.setCentralWidget(t)
 
-        parotimizacao = ParametrosOtimizacao()
 
     def createmenubar(self):
         simulacaoact = QAction('Nova Simulação', self)

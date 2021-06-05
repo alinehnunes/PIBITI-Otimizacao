@@ -17,7 +17,7 @@ class Variedade:
 
 
 
-class ParametrosOtimizacao:
+class Otimizacao:
     def __init__(self):
         self.parametros = []
         self.qntvariedades = 0
