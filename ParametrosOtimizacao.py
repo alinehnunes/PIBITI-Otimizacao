@@ -2,10 +2,19 @@ from math import inf
 
 
 class Parametro:
-    def __init__(self):
-        self.nome = ""
+    def __init__(self, n):
+        self.nome = n
         self.limiteInf = -inf
         self.limiteSup = inf
+
+    def setlimites(self, linf, lsup):
+        self.limiteInf = linf
+        self.limiteSup = lsup
+
+class Variedade:
+    def __init__(self, n):
+        self.nome = n
+
 
 
 class ParametrosOtimizacao:
