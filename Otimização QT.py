@@ -5,7 +5,7 @@ from PyQt5 import QtCore
 from Simulacao import Simulacao, PaginaInicial
 from BancodeDados import GraficoParametro
 from HistoricoSimulacao import Historicosimulacao
-from ParametrosOtimizacao import Otimizacao
+
 
 class MainWindow(QMainWindow):
 
