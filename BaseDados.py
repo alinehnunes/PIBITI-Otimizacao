@@ -17,17 +17,7 @@ class Basedados(QWidget):
         for i in range(len(self.dataframe.index)):
             for j in range(len(self.dataframe.columns)):
                 variedade = Variedade(self.dataframe.iloc[i, j])
-            print(variedade.nome)
-            print(variedade.custo)
-            print(variedade.ph)
-            print(variedade.pf)
-            print(variedade.pe)
-            print(variedade.viscosidade)
-            print(variedade.brix)
-            print(variedade.pol)
-            print(variedade.cor)
             self.listavariedades.append(variedade)
-        print(self.listavariedades)
 
 
     def leituradados(self, nomearquivo, nomepasta):
