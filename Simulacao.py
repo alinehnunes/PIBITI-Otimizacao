@@ -11,6 +11,7 @@ from ParametrosOtimizacao import Otimizacao, Parametro, Variedade
 
 teste1 = Otimizacao()
 
+
 class PageWindow(QWidget):
     gotoSignal = QtCore.pyqtSignal(str)
 
@@ -49,11 +50,10 @@ class Selecaoparametros(PageWindow):
         self.setLayout(self.layout)
 
     def checarselecionados(self):
-        selecionados = []
+        teste1.parametros = []
         for botao in self.listabotoes:
             param = Parametro(botao.text())
             if botao.checkState():
-                selecionados.append(botao)
                 teste1.addparametro(param)
         for i in range(len(teste1.parametros)):
             print(teste1.parametros[i].nome)
