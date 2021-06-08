@@ -43,6 +43,7 @@ class Basedados(QWidget):
                 aux2 = str(aux)
                 self.tablewidget.setItem(i, j, QTableWidgetItem(aux2))
 
+        self.tablewidget.viewport().installEventFilter(self)
         return self.tablewidget
 
     def createVariedades(self, dataframe):
