@@ -11,11 +11,6 @@ class Parametro:
         self.limiteInf = linf
         self.limiteSup = lsup
 
-class Variedade:
-    def __init__(self, n):
-        self.nome = n
-
-
 
 class Otimizacao:
     def __init__(self):
@@ -28,3 +23,6 @@ class Otimizacao:
 
     def addvariedade(self, variedade):
         self.variedades.append(variedade)
+
+    def getqntvariedades(self, variedades):
+        self.qntvariedades = len(variedades)
