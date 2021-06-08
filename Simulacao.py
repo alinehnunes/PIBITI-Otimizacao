@@ -7,9 +7,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget
 from BaseDados import Basedados
-from ParametrosOtimizacao import Otimizacao, Parametro, Variedade
+from ParametrosOtimizacao import Otimizacao, Parametro
 
-teste1 = Otimizacao()
+Otimizacao = Otimizacao()
 
 
 class PageWindow(QWidget):
@@ -50,11 +50,11 @@ class Selecaoparametros(PageWindow):
         self.setLayout(self.layout)
 
     def checarselecionados(self):
-        teste1.parametros = []
+        Otimizacao.parametros = []
         for botao in self.listabotoes:
             param = Parametro(botao.text())
             if botao.checkState():
-                teste1.addparametro(param)
+                Otimizacao.addparametro(param)
 
     def goToLimiteParametros(self):
         self.goto("LimiteParametros")
@@ -92,9 +92,9 @@ class LimiteParametros(PageWindow):
 
         while self.layout2.count() > 0:
             self.layout2.itemAt(0).setParent(None)
-        for i in range(len(teste1.parametros)):
+        for i in range(len(Otimizacao.parametros)):
             self.layoutvar = QHBoxLayout()
-            nomevar = QLabel(teste1.parametros[i].nome)
+            nomevar = QLabel(Otimizacao.parametros[i].nome)
             limiteinf = QLineEdit()
             limiteinf.setPlaceholderText("Limite Inferior do parâmetro")
             limitesup = QLineEdit()
