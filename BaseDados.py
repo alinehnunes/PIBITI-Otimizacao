@@ -1,5 +1,6 @@
 import pandas as pd
 from PyQt5.QtWidgets import *
+from ParametrosOtimizacao import Otimizacao
 
 
 class Basedados(QWidget):
@@ -13,11 +14,8 @@ class Basedados(QWidget):
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.openbase(self.dataframe))
         self.setLayout(self.layout)
-        self.listavariedades = []
-        for i in range(len(self.dataframe.index)):
-            for j in range(len(self.dataframe.columns)):
-                variedade = Variedade(self.dataframe.iloc[i, j])
-            self.listavariedades.append(variedade)
+        listavariedades = self.createVariedades(self.dataframe)
+        print(listavariedades)
 
 
     def leituradados(self, nomearquivo, nomepasta):
@@ -46,6 +44,13 @@ class Basedados(QWidget):
                 self.tablewidget.setItem(i, j, QTableWidgetItem(aux2))
 
         return self.tablewidget
+
+    def createVariedades(self, dataframe):
+        listavariedades = []
+        for i in range(len(dataframe.index)):
+            variedade = Variedade(*dataframe.iloc[[i]])
+            listavariedades.append(variedade)
+        return listavariedades
 
 
 class Variedade:
