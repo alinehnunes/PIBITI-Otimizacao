@@ -45,16 +45,24 @@ class Selecaoparametros(PageWindow):
 
         btnvariedades = QPushButton("Escolhe Limites")
         btnvariedades.clicked.connect(self.checarselecionados)
-        btnvariedades.clicked.connect(self.goToLimiteParametros)
         self.layout.addWidget(btnvariedades)
         self.setLayout(self.layout)
 
     def checarselecionados(self):
         Otimizacao.parametros = []
+        checkedbuttons = []
         for botao in self.listabotoes:
             param = Parametro(botao.text())
             if botao.checkState():
                 Otimizacao.addparametro(param)
+                checkedbuttons.append(botao)
+        if len(checkedbuttons) == 0:
+            msg = QMessageBox()
+            msg.setWindowTitle("Adicionar Parametros")
+            msg.setText("Favor selecionar no mínimo um parâmetro para avançar")
+            msg.exec_()
+        else:
+            self.goToLimiteParametros()
 
     def goToLimiteParametros(self):
         self.goto("LimiteParametros")
