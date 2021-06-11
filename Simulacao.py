@@ -94,7 +94,7 @@ class LimiteParametros(PageWindow):
 
     def goToSelecaoVariedades(self):
         self.goto("SelecaoVariedades")
-        # self.addlimites(Otimizacao)
+        self.addlimites()
 
     def showEvent(self, ev):
 
@@ -111,10 +111,13 @@ class LimiteParametros(PageWindow):
         self.layoutprincipal.addLayout(self.layout2)
         return QWidget.showEvent(self, ev)
 
-    def addlimites(self, Otimizacao): # Ainda sem funcionar
+    def addlimites(self):
         for i in range(len(Otimizacao.parametros)):
-            print(self.layout2.itemAtPosition(i, 1))
-            print(self.layout2.itemAtPosition(i, 2))
+            limiteinf = self.layout2.itemAtPosition(i, 1).widget().text()
+            limitesup = self.layout2.itemAtPosition(i, 2).widget().text()
+            Otimizacao.parametros[i].setlimites(limiteinf, limitesup)
+            print("o parametro", Otimizacao.parametros[i].nome, "tem limites", Otimizacao.parametros[i].limiteInf, "e", Otimizacao.parametros[i].limiteSup )
+
 
 class SelecaoVariedades(PageWindow, Basedados):
     def __init__(self, nomearquivo, nomeplanilha, parent=None):
