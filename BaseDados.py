@@ -55,7 +55,7 @@ class Basedados(QWidget):
 
 
 class Variedade:
-    def __init__(self, nome="", custo=0, ph=7, pf=0, pe=100, brix=0, pol=0, viscosidade=0, cor=0):
+    def __init__(self, nome="", custo=0, ph=7, pf=0, pe=100, brix=0, pol=0, viscosidade=0, cor=0, pureza=1, atr=1, ar=1, fibra=1):
         self.nome = nome
         self.custo = custo
         self.ph = ph
@@ -65,5 +65,9 @@ class Variedade:
         self.pol = pol
         self.viscosidade = viscosidade
         self.cor = cor
+        self.pureza = pureza
+        self.atr = atr
+        self.ar = ar
+        self.fibra = fibra
 
 
