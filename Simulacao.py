@@ -45,16 +45,24 @@ class Selecaoparametros(PageWindow):
 
         btnvariedades = QPushButton("Escolhe Limites")
         btnvariedades.clicked.connect(self.checarselecionados)
-        btnvariedades.clicked.connect(self.goToLimiteParametros)
         self.layout.addWidget(btnvariedades)
         self.setLayout(self.layout)
 
     def checarselecionados(self):
         Otimizacao.parametros = []
+        checkedbuttons = []
         for botao in self.listabotoes:
             param = Parametro(botao.text())
             if botao.checkState():
                 Otimizacao.addparametro(param)
+                checkedbuttons.append(botao)
+        if len(checkedbuttons) == 0:
+            msg = QMessageBox()
+            msg.setWindowTitle("Adicionar Parametros")
+            msg.setText("Favor selecionar no mínimo um parâmetro para avançar")
+            msg.exec_()
+        else:
+            self.goToLimiteParametros()
 
     def goToLimiteParametros(self):
         self.goto("LimiteParametros")
@@ -68,44 +76,55 @@ class LimiteParametros(PageWindow):
         self.layout1 = QVBoxLayout()
         self.layout1.addWidget(info)
         self.layoutprincipal.addLayout(self.layout1)
-        self.layout2 = QVBoxLayout()
+        self.layout2 = QGridLayout()
         self.layout3 = QHBoxLayout()
+        self.layoutprincipal.addLayout(self.layout2)
         btnvoltarselecao = QPushButton('Voltar para selecao de parâmetros')
         btnvoltarselecao.clicked.connect(self.goToSelecaoParametros)
         btnescolhervar = QPushButton('Escolher Variedades')
         btnescolhervar.clicked.connect(self.goToSelecaoVariedades)
         self.layout3.addWidget(btnvoltarselecao)
         self.layout3.addWidget(btnescolhervar)
-        self.layoutprincipal.addLayout(self.layout2)
         self.layoutprincipal.addLayout(self.layout3)
 
         self.setLayout(self.layoutprincipal)
 
+    def cleanlayout(self, layout):
+        items = []
+        for i in range(layout.count()):
+            items.append(layout.itemAt(i))
+        for w in items:
+            w.widget().deleteLater()
 
     def goToSelecaoParametros(self):
+        self.cleanlayout(self.layout2)
         self.goto("SelecaoParametros")
 
     def goToSelecaoVariedades(self):
         self.goto("SelecaoVariedades")
+        self.addlimites()
 
     def showEvent(self, ev):
 
-        while self.layout2.count() > 0:
-            self.layout2.itemAt(0).setParent(None)
+        self.cleanlayout(self.layout2)
         for i in range(len(Otimizacao.parametros)):
-            self.layoutvar = QHBoxLayout()
             nomevar = QLabel(Otimizacao.parametros[i].nome)
             limiteinf = QLineEdit()
             limiteinf.setPlaceholderText("Limite Inferior do parâmetro")
             limitesup = QLineEdit()
             limitesup.setPlaceholderText("Limite Superior do parâmetro")
-            self.layoutvar.addWidget(nomevar)
-            self.layoutvar.addWidget(limiteinf)
-            self.layoutvar.addWidget(limitesup)
-            self.layout2.addLayout(self.layoutvar)
-            self.layoutprincipal.addLayout(self.layout2)
-
+            self.layout2.addWidget(nomevar, i, 0)
+            self.layout2.addWidget(limiteinf, i, 1)
+            self.layout2.addWidget(limitesup, i, 2)
+        self.layoutprincipal.addLayout(self.layout2)
         return QWidget.showEvent(self, ev)
+
+    def addlimites(self):
+        for i in range(len(Otimizacao.parametros)):
+            limiteinf = self.layout2.itemAtPosition(i, 1).widget().text()
+            limitesup = self.layout2.itemAtPosition(i, 2).widget().text()
+            Otimizacao.parametros[i].setlimites(limiteinf, limitesup)
+            print("o parametro", Otimizacao.parametros[i].nome, "tem limites", Otimizacao.parametros[i].limiteInf, "e", Otimizacao.parametros[i].limiteSup )
 
 
 class SelecaoVariedades(PageWindow, Basedados):
@@ -173,7 +192,6 @@ class Simulacao(QWidget):
 
         self.goto("SelecaoParametros")
         self.setLayout(self.layout)
-
 
 
     def register(self, widget, name):
