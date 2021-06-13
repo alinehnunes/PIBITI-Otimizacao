@@ -2,55 +2,105 @@ import matplotlib
 import numpy as np
 from scipy.optimize import Bounds
 from scipy.optimize import minimize
+from ParametrosOtimizacao import Otimizacao
+from ParametrosOtimizacao import Parametro
 
-# Pos 0 = Hidratado | Pos 1 = Anidro | Pos 2 = Comercial
-x0 = [0.6, 0.2, 0.2]
+teste_otm = Otimizacao()
+teste_otm.setqtdvariedades(3)
+
+qtdvariedades = teste_otm.qtdvariedades
+
+# Chute inicial
+x0 = np.zeros(qtdvariedades)
+x_inicial = 1/qtdvariedades
+
+x0 = [x_inicial for i in range(qtdvariedades)] 
 
 # Limites para as composições de cada álcool
-LB = [0, 0, 0]
-UB = [1, 1, 1]
+LB = np.zeros(qtdvariedades)
+UB = np.ones(qtdvariedades)
 limites = Bounds(LB, UB)
 
-# Definição da função Objetivo
-def objective(x):
-    return (-1)*(0.5164*x[0] + 0.5356*x[1] + 0.4938*x[2])
+custo = 0
+pol = 0
+pureza = 0 
+atr = 0 
+ar = 0 
+fibra = 0
 
-def restri1(x):
-    return 6.442462*x[0] + 4.817462*x[1] + 4.557462*x[2] - 0.859242*x[0]*x[1] + 6.570758*x[1]*x[2] - 6
+# Definição da função Objetivo - CUSTO (minimizar)
+#def custo(x,teste_otm,custo):
+def custo(x):
+    custo = [custo+(teste_otm.variedades[i].custo*x[i]) for i in range(qtdvariedades)]
+    return (-1)*custo
 
-def restri2(x):
-    return 8 - (6.442462*x[0] + 4.817462*x[1] + 4.557462*x[2] - 0.859242*x[0]*x[1] + 6.570758*x[1]*x[2])
-# Definição das restrições
-def restri3(x):
-    return 0.812263*x[0] + 0.795183*x[1] + 0.791183*x[2] - 0.8076
+#restrição pol limite inferior
+def pol1(x):
+    pol = [pol+(teste_otm.variedades[i].pol*x[i]) for i in range(qtdvariedades)]
+    return pol - Parametro("pol").limiteInf
 
-def restri4(x):
-    return 0.811 - (0.812263*x[0] + 0.795183*x[1] + 0.791183*x[2])
+#restrição pol limite superior
+def pol2(x):
+    pol = [pol+(teste_otm.variedades[i].pol*x[i]) for i in range(qtdvariedades)]
+    return Parametro("pol").limiteSup - pol
 
-def restri5(x):
-    return 30 - (29.8658*x[0] + 32.8683*x[1] + 56.8883*x[2] - 26.8405*x[0]*x[1] - 26.8405*x[0]*x[2])
+#restrição pureza limite inferior
+def pureza1(x):
+    pureza = [pureza+(teste_otm.variedades[i].pureza*x[i]) for i in range(qtdvariedades)]
+    return pureza - Parametro("pureza").limiteInf
 
-def restri6(x):
-    return 92.15857*x[0] + 98.1157*x[1] + 99.45857*x[2] - 92.5
+#restrição pureza limite superior
+def pureza2(x):
+    pureza = [pureza+(teste_otm.variedades[i].pureza*x[i]) for i in range(qtdvariedades)]
+    return Parametro("pureza").limiteSup - pureza
 
-def restri7(x):
-    return 93.8 - (92.15857*x[0] + 98.1157*x[1] + 99.45857*x[2])
+#restrição atr limite inferior
+def atr1(x):
+    atr = [atr+(teste_otm.variedades[i].atr*x[i]) for i in range(qtdvariedades)]
+    return atr - Parametro("atr").limiteInf
 
-def restri8(x):
-    return x[0] + x[1] + x[2] - 1
+#restrição atr limite superior
+def atr2(x):
+    atr = [atr+(teste_otm.variedades[i].atr*x[i]) for i in range(qtdvariedades)]
+    return Parametro("atr").limiteSup - atr
 
+#restrição ar limite inferior
+def ar1(x):
+    ar = [ar+(teste_otm.variedades[i].ar*x[i]) for i in range(qtdvariedades)]
+    return ar - Parametro("ar").limiteInf
 
-rest1 = {'type': 'ineq', 'fun': restri1}
-rest2 = {'type': 'ineq', 'fun': restri2}
-rest3 = {'type': 'ineq', 'fun': restri3}
-rest4 = {'type': 'ineq', 'fun': restri4}
-rest5 = {'type': 'ineq', 'fun': restri5}
-rest6 = {'type': 'ineq', 'fun': restri6}
-rest7 = {'type': 'ineq', 'fun': restri7}
-rest8 = {'type': 'eq', 'fun': restri8}
+#restrição atr limite superior
+def ar2(x):
+    ar = [ar+(teste_otm.variedades[i].ar*x[i]) for i in range(qtdvariedades)]
+    return Parametro("ar").limiteSup - ar
 
-restricoes = [rest1, rest2, rest3, rest4, rest5, rest6, rest7, rest8]
+#restrição fibra limite inferior
+def fibra1(x):
+    fibra = [fibra+(teste_otm.variedades[i].fibra*x[i]) for i in range(qtdvariedades)]
+    return fibra - Parametro("fibra").limiteInf
 
-solucao = minimize(objective, x0, method='SLSQP', bounds=limites, constraints=restricoes)
+#restrição fibra limite superior
+def fibra2(x):
+    fibra = [fibra+(teste_otm.variedades[i].fibra*x[i]) for i in range(qtdvariedades)]
+    return Parametro("fibra").limiteSup - fibra
+
+def composicao(x):
+    return sum(x) - 1
+
+#restrições
+pol1 = {'type': 'ineq', 'fun': pol1}
+pol2 = {'type': 'ineq', 'fun': pol2}
+pureza1 = {'type': 'ineq', 'fun': pureza1}
+pureza2 = {'type': 'ineq', 'fun': pureza2}
+atr1 = {'type': 'ineq', 'fun': atr1}
+atr2 = {'type': 'ineq', 'fun': atr2}
+ar1 = {'type': 'ineq', 'fun': ar1}
+ar2 = {'type': 'ineq', 'fun': ar2}
+fibra1 = {'type': 'ineq', 'fun': fibra1}
+fibra2 = {'type': 'ineq', 'fun': fibra2}
+composicao = {'type': 'eq', 'fun': composicao}
+
+restricoes = [pol1, pol2, pureza1, pureza2, atr1, atr2, ar1, ar2, fibra1, fibra2, composicao]
+
+solucao = minimize(custo, x0, method='SLSQP', bounds=limites, constraints=restricoes)
 print(solucao)
-
