@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(t)
 
     def openbancodedados(self):
-        t = GraficoParametro("Base de dados inicial.xls", "Planilha1")
+        t = GraficoParametro("Gráfico teste", "Base de dados inicial.xls", "Planilha1")
         self.setCentralWidget(t)
 
     def openhistoricosimu(self):

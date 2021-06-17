@@ -3,7 +3,6 @@ from BaseDados import Basedados
 from PyQt5 import QtCore
 from PyQt5.Qt import Qt
 from PyQt5.QtChart import QChart, QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBarSeries
-import random
 
 class GraficoParametro(Basedados):
 
@@ -50,15 +49,19 @@ class GraficoParametro(Basedados):
             if event.type() == QtCore.QEvent.MouseButtonRelease:
                 if event.button() == QtCore.Qt.LeftButton:
                     selectedcolumn = self.tablewidget.currentColumn()
+                    print(f'coluna selecionada é {selectedcolumn}')
                     row = self.tablewidget.rowCount()
                     column = self.tablewidget.columnCount()
-                    self.x = []
-                    self.y = []
-                    graf = self.layout.itemAt(2)
-                    for i in range(row):
-                        nomevar = self.tablewidget.item(i, 0).text()
-                        self.x.append(nomevar)
-                        valorvar = self.tablewidget.item(i, selectedcolumn).text()
-                        self.y.append(valorvar)
-                self.atualizegraph(self.x, self.y, graf)
+                    if selectedcolumn == 0:
+                        pass
+                    else:
+                        self.x = []
+                        self.y = []
+                        graf = self.layout.itemAt(2)
+                        for i in range(row):
+                            nomevar = self.tablewidget.item(i, 0).text()
+                            self.x.append(nomevar)
+                            valorvar = self.tablewidget.item(i, selectedcolumn).text()
+                            self.y.append(valorvar)
+                        self.atualizegraph(self.x, self.y, graf)
         return QtCore.QObject.event(source, event)
