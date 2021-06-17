@@ -1,43 +1,64 @@
 from PyQt5.QtWidgets import QLabel
 from BaseDados import Basedados
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
-import numpy as np
-
-
-class MplCanvas(FigureCanvas):
-    def __init__(self, title, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super(MplCanvas, self).__init__(fig)
-
-        x = np.linspace(0, 2 * np.pi, 400)
-        y = (x ** 2)
-        p = self.figure.subplots()
-        title = "grafico teste"
-        p.plot(x, y)
-        p.set_title(title)
-    
+from PyQt5 import QtCore
+from PyQt5.Qt import Qt
+from PyQt5.QtChart import QChart, QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBarSeries
+import random
 
 class GraficoParametro(Basedados):
 
-    def __init__(self, nomearquivo, nomeplanilha, parent=None):
+    def __init__(self, title, nomearquivo, nomeplanilha, parent=None):
         super().__init__(nomearquivo, nomeplanilha, parent)
-        grafico = MplCanvas(self, "Grafico Inicial")
-        # grafico.axes.bar(["var1", "var2", "var3", "var4", "var5", "var6"], [3, 4, 5, 6, 3, 5])
+        self.x = ["Selecione o parâmetro a ser comparado na tabela acima"]
+        self.y = [0]
 
         info = QLabel("Selecione o Parâmetro para ser comparado na tabela acima")
         self.layout.addWidget(info)
-        self.layout.addWidget(grafico)
+        self.creategraph(self.x, self.y)
 
+    def creategraph(self, x, y):
+        series = QBarSeries()
 
-    def plotargraf(self, linhas, colunas):
-        labels = self.linhas
-        values = self.colunas
+        for i in range(len(x)):
+            set = QBarSet(x[i])
+            set.append([float(y[i])])
+            series.append(set)
 
-        plt.bar(labels, values)
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle('Comparação das Propreidades')
+        chart.setAnimationOptions(QChart.SeriesAnimations)
 
-        plt.figure(figsize=())
+        axisY = QValueAxis()
+        axisY.setRange(0, float(max(y)))
 
-        plt.show()
+        chart.addAxis(axisY, Qt.AlignLeft)
+
+        chart.legend().setVisible(True)
+        chart.legend().setAlignment(Qt.AlignBottom)
+
+        chartView = QChartView(chart)
+        self.layout.addWidget(chartView)
+
+    def atualizegraph(self, x, y, graf):
+        graf.widget().deleteLater()
+        self.creategraph(x,y)
+
+    def eventFilter(self, source, event):
+        if self.tablewidget.selectedIndexes() != []:
+
+            if event.type() == QtCore.QEvent.MouseButtonRelease:
+                if event.button() == QtCore.Qt.LeftButton:
+                    selectedcolumn = self.tablewidget.currentColumn()
+                    row = self.tablewidget.rowCount()
+                    column = self.tablewidget.columnCount()
+                    self.x = []
+                    self.y = []
+                    graf = self.layout.itemAt(2)
+                    for i in range(row):
+                        nomevar = self.tablewidget.item(i, 0).text()
+                        self.x.append(nomevar)
+                        valorvar = self.tablewidget.item(i, selectedcolumn).text()
+                        self.y.append(valorvar)
+                self.atualizegraph(self.x, self.y, graf)
+        return QtCore.QObject.event(source, event)

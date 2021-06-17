@@ -14,9 +14,8 @@ class Basedados(QWidget):
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.openbase(self.dataframe))
         self.setLayout(self.layout)
-        listavariedades = self.createVariedades(self.dataframe)
-        print(listavariedades)
-
+        self.listavariedades = self.createVariedades(self.dataframe)
+        print(self.listavariedades)
 
     def leituradados(self, nomearquivo, nomepasta):
         dados = pd.ExcelFile(nomearquivo)
@@ -65,5 +64,3 @@ class Variedade:
         self.pol = pol
         self.viscosidade = viscosidade
         self.cor = cor
-
-
