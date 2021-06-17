@@ -75,6 +75,7 @@ class LimiteParametros(PageWindow):
         info = QLabel('Selecione os limites de otimização para os parâmetros escolhidos')
         self.layout1 = QVBoxLayout()
         self.layout1.addWidget(info)
+        self.layout1.setAlignment(Qt.AlignCenter)
         self.layoutprincipal.addLayout(self.layout1)
         self.layout2 = QGridLayout()
         self.layout3 = QHBoxLayout()
@@ -85,6 +86,7 @@ class LimiteParametros(PageWindow):
         btnescolhervar.clicked.connect(self.goToSelecaoVariedades)
         self.layout3.addWidget(btnvoltarselecao)
         self.layout3.addWidget(btnescolhervar)
+        self.layout3.setAlignment(Qt.AlignBottom)
         self.layoutprincipal.addLayout(self.layout3)
 
         self.setLayout(self.layoutprincipal)
@@ -116,6 +118,7 @@ class LimiteParametros(PageWindow):
             self.layout2.addWidget(nomevar, i, 0)
             self.layout2.addWidget(limiteinf, i, 1)
             self.layout2.addWidget(limitesup, i, 2)
+            self.layout2.setAlignment(Qt.AlignCenter)
         self.layoutprincipal.addLayout(self.layout2)
         return QWidget.showEvent(self, ev)
 
