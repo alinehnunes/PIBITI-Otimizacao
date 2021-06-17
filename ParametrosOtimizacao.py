@@ -11,7 +11,6 @@ class Parametro:
         self.limiteInf = linf
         self.limiteSup = lsup
 
-
 class Otimizacao:
     def __init__(self):
         self.parametros = []
@@ -24,5 +23,5 @@ class Otimizacao:
     def addvariedade(self, variedade):
         self.variedades.append(variedade)
 
-    def getqntvariedades(self, variedades):
-        self.qntvariedades = len(variedades)
+    def setqtdvariedades(self, qtdvariedades):
+        self.qtdvariedades = qtdvariedades
