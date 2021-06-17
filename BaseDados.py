@@ -64,3 +64,7 @@ class Variedade:
         self.pol = pol
         self.viscosidade = viscosidade
         self.cor = cor
+        self.pureza = pureza
+        self.atr = atr
+        self.ar = ar
+        self.fibra = fibra
