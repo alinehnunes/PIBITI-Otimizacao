@@ -48,8 +48,9 @@ class Basedados(QWidget):
     def createVariedades(self, dataframe):
         listavariedades = []
         for i in range(len(dataframe.index)):
-            variedade = Variedade(*dataframe.iloc[[i]])
-            listavariedades.append(variedade)
+            variedade = Variedade(*dataframe.loc[i])
+            dictvar = {variedade.nome: variedade}
+            listavariedades.append(dictvar)
         return listavariedades
 
 
