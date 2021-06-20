@@ -4,7 +4,7 @@ from random import randint
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QWidget
 from BaseDados import Basedados
 from ParametrosOtimizacao import Otimizacao, Parametro
@@ -27,17 +27,17 @@ class Selecaoparametros(PageWindow):
         return botao
 
     def colocarbotao(self, layout, botao):
-        self.layout.addWidget(botao)
+        layout.addWidget(botao)
 
     def __init__(self):
         super().__init__()
 
         info = QLabel("Selecione os parâmetros a serem otimizados")
+        adjustlabel(info)
         self.layout = QVBoxLayout()
         self.layout.addWidget(info)
         parametros = ['Custo', 'pH', 'Ponto de Fusão', 'Ponto de Ebulição', 'Brix', 'Pol', 'Viscosidade', 'Cor']
         self.listabotoes = []
-
         for i in range(len(parametros)):
             botao = self.botaocheck(parametros[i])
             self.colocarbotao(self.layout, botao)
@@ -73,6 +73,7 @@ class LimiteParametros(PageWindow):
         super().__init__(parent)
         self.layoutprincipal = QVBoxLayout()
         info = QLabel('Selecione os limites de otimização para os parâmetros escolhidos')
+        adjustlabel(info)
         self.layout1 = QVBoxLayout()
         self.layout1.addWidget(info)
         self.layout1.setAlignment(Qt.AlignCenter)
@@ -134,9 +135,8 @@ class SelecaoVariedades(PageWindow, Basedados):
     def __init__(self, nomearquivo, nomeplanilha, parent=None):
         super().__init__(nomearquivo, nomeplanilha, parent)
         infoselecao = QLabel('Selecione as variedades escolhidas na tabela acima')
-        grafico = QLabel('Teste')
+        adjustlabel(infoselecao)
         self.layout.addWidget(infoselecao)
-        self.layout.addWidget(grafico)
         self.listaselecionadas = QListWidget()
         self.layout.addWidget(self.listaselecionadas)
         self.layout2 = QHBoxLayout()
@@ -156,7 +156,6 @@ class SelecaoVariedades(PageWindow, Basedados):
 
     def eventFilter(self, source, event):
         if self.tablewidget.selectedIndexes() != []:
-
             if event.type() == QtCore.QEvent.MouseButtonRelease:
                 if event.button() == QtCore.Qt.LeftButton:
                     row = self.tablewidget.currentRow()
@@ -165,7 +164,16 @@ class SelecaoVariedades(PageWindow, Basedados):
 
     def addlist(self, row):
         escolhido = self.tablewidget.item(row, 0).text()
-        self.listaselecionadas.addItem(escolhido)
+        check = True
+        for i in range(self.listaselecionadas.count()):
+            if escolhido == self.listaselecionadas.item(i).text():
+                check = False
+            else:
+                pass
+        if check:
+            self.listaselecionadas.addItem(escolhido)
+
+
 
 
 class Otimizar(PageWindow):
@@ -173,6 +181,7 @@ class Otimizar(PageWindow):
         super().__init__(parent)
         self.layout = QVBoxLayout()
         info = QLabel("Resultado da Otimização")
+        adjustlabel(info)
         self.layout.addWidget(info)
         self.setLayout(self.layout)
 
@@ -216,9 +225,19 @@ class PaginaInicial(QWidget):
         super().__init__(parent)
         self.layout = QVBoxLayout()
         texto = QLabel("Otimização em Python")
+        adjustlabel(texto)
+        texto.setAlignment(Qt.AlignCenter)
         img = QLabel()
+        img.setFrameStyle(QFrame.Panel)
+        img.setLineWidth(2)
         imagem = QPixmap("CanadeAcucar.jfif")
         img.setPixmap(imagem)
         self.layout.addWidget(texto)
         self.layout.addWidget(img)
+        self.layout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.layout)
+
+
+def adjustlabel(lbl):
+    lbl.setFont(QFont('Helvetica', 12))
+    lbl.setFrameStyle(QFrame.Panel)
