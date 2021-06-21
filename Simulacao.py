@@ -200,6 +200,27 @@ class Otimizar(PageWindow):
         self.layout.addWidget(info)
         self.setLayout(self.layout)
 
+    def showEvent(self, ev):
+        self.layoutinfos = QVBoxLayout()
+        qntparametros = QLabel('Parametros selecionados:')
+        self.layoutinfos.addWidget(qntparametros)
+        for i in range(len(Otimizacao.parametros)):
+            par = Otimizacao.parametros[i]
+            parnome = str(par.nome)
+            parlimiteinf = str(par.limiteInf)
+            parlimitesup = str(par.limiteSup)
+            parametrosoti = QLabel(parnome + ':  Limite inferior:  ' + parlimiteinf + ', Limite superiror:  ' + parlimitesup)
+            self.layoutinfos.addWidget(parametrosoti)
+        qntvariedades = QLabel('As variedades escolhidas foram:')
+        self.layoutinfos.addWidget(qntvariedades)
+        for i in range(len(Otimizacao.variedades)):
+            var = Otimizacao.variedades[i]
+            variedadesoti = QLabel(var.nome)
+            self.layoutinfos.addWidget(variedadesoti)
+        self.layout.addLayout(self.layoutinfos)
+
+        return QWidget.showEvent(self, ev)
+
 
 class Simulacao(QWidget):
     def __init__(self, parent=None):
