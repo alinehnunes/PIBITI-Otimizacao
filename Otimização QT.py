@@ -2,6 +2,8 @@ import sys
 
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPalette
 from Simulacao import Simulacao, PaginaInicial
 from BancodeDados import GraficoParametro
 from HistoricoSimulacao import Historicosimulacao
@@ -14,7 +16,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle('Otimização Cana de Açúcar')
         self.setGeometry(400, 200, 600, 400)
-        self.setStyleSheet("background-color: #d3d3d3;")
+        #self.setStyleSheet("background-color: #d3d3d3;")
 
         self.createmenubar()
 
@@ -52,6 +54,14 @@ class MainWindow(QMainWindow):
 
 
 app = QApplication(sys.argv)
+app.setStyle('Fusion')
+
+qp = QPalette()
+qp.setColor(QPalette.ButtonText, Qt.black)
+qp.setColor(QPalette.Window, Qt.lightGray)
+qp.setColor(QPalette.Button, Qt.gray)
+app.setPalette(qp)
+
 w = MainWindow()
 w.show()
 app.exec_()

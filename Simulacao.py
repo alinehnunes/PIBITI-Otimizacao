@@ -34,19 +34,26 @@ class Selecaoparametros(PageWindow):
 
         info = QLabel("Selecione os parâmetros a serem otimizados")
         adjustlabel(info)
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(info)
+        self.layoutprincipal = QVBoxLayout()
+        self.layout1 = QVBoxLayout()
+        self.layout1.addWidget(info)
+        self.layout1.addStretch(1)
+        self.layoutprincipal.addLayout(self.layout1)
+        self.layout2 = QVBoxLayout()
         parametros = ['Custo', 'pH', 'Ponto de Fusão', 'Ponto de Ebulição', 'Brix', 'Pol', 'Viscosidade', 'Cor']
         self.listabotoes = []
         for i in range(len(parametros)):
             botao = self.botaocheck(parametros[i])
-            self.colocarbotao(self.layout, botao)
+            self.colocarbotao(self.layout2, botao)
             self.listabotoes.append(botao)
 
-        btnvariedades = QPushButton("Escolhe Limites")
+        self.layout2.setAlignment(Qt.AlignLeft)
+        self.layout2.addStretch(1)
+        btnvariedades = QPushButton("Escolher Limites")
         btnvariedades.clicked.connect(self.checarselecionados)
-        self.layout.addWidget(btnvariedades)
-        self.setLayout(self.layout)
+        self.layoutprincipal.addLayout(self.layout2)
+        self.layoutprincipal.addWidget(btnvariedades)
+        self.setLayout(self.layoutprincipal)
 
     def checarselecionados(self):
         Otimizacao.parametros = []
@@ -198,6 +205,7 @@ class Otimizar(PageWindow):
         info = QLabel("Resultado da Otimização")
         adjustlabel(info)
         self.layout.addWidget(info)
+        self.layout.addStretch(1)
         self.setLayout(self.layout)
 
     def showEvent(self, ev):
@@ -217,6 +225,7 @@ class Otimizar(PageWindow):
             var = Otimizacao.variedades[i]
             variedadesoti = QLabel(var.nome)
             self.layoutinfos.addWidget(variedadesoti)
+        self.layoutinfos.setAlignment(Qt.AlignVCenter)
         self.layout.addLayout(self.layoutinfos)
 
         return QWidget.showEvent(self, ev)
@@ -266,8 +275,9 @@ class PaginaInicial(QWidget):
         img = QLabel()
         img.setFrameStyle(QFrame.Panel)
         img.setLineWidth(2)
-        imagem = QPixmap("CanadeAcucar.jfif")
-        img.setPixmap(imagem)
+        imagem = QPixmap("Cana2.jpg")
+        imagemcorrigida = imagem.scaled(640, 640, QtCore.Qt.KeepAspectRatio)
+        img.setPixmap(imagemcorrigida)
         self.layout.addWidget(texto)
         self.layout.addWidget(img)
         self.layout.setAlignment(Qt.AlignCenter)
