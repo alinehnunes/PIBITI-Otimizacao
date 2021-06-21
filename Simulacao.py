@@ -135,10 +135,13 @@ class SelecaoVariedades(PageWindow, Basedados):
     def __init__(self, nomearquivo, nomeplanilha, parent=None):
         super().__init__(nomearquivo, nomeplanilha, parent)
         infoselecao = QLabel('Selecione as variedades escolhidas na tabela acima')
-        adjustlabel(infoselecao)
+        self.sublayout = QHBoxLayout()
         self.layout.addWidget(infoselecao)
         self.listaselecionadas = QListWidget()
-        self.layout.addWidget(self.listaselecionadas)
+        self.sublayout.addWidget(self.listaselecionadas)
+        btnapagar = QPushButton('Apagar Variedade')
+        btnapagar.clicked.connect(self.removeitem)
+        self.sublayout.addWidget(btnapagar)
         self.layout2 = QHBoxLayout()
         btnvoltarqnt = QPushButton('Voltar para seleção de limites')
         btnvoltarqnt.clicked.connect(self.goToLimiteParametros)
@@ -146,6 +149,7 @@ class SelecaoVariedades(PageWindow, Basedados):
         btnlimitepar.clicked.connect(self.goToOtimizar)
         self.layout2.addWidget(btnvoltarqnt)
         self.layout2.addWidget(btnlimitepar)
+        self.layout.addLayout(self.sublayout)
         self.layout.addLayout(self.layout2)
 
     def goToLimiteParametros(self):
@@ -160,6 +164,7 @@ class SelecaoVariedades(PageWindow, Basedados):
                 if event.button() == QtCore.Qt.LeftButton:
                     row = self.tablewidget.currentRow()
                     self.addlist(row)
+
         return QtCore.QObject.event(source, event)
 
     def addlist(self, row):
@@ -173,7 +178,12 @@ class SelecaoVariedades(PageWindow, Basedados):
         if check:
             self.listaselecionadas.addItem(escolhido)
 
-
+    def removeitem(self):
+        deletelist = self.listaselecionadas.selectedItems()
+        if not deletelist:
+            return
+        for item in deletelist:
+            self.listaselecionadas.takeItem(self.listaselecionadas.row(item))
 
 
 class Otimizar(PageWindow):

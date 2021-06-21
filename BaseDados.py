@@ -15,7 +15,6 @@ class Basedados(QWidget):
         self.layout.addWidget(self.openbase(self.dataframe))
         self.setLayout(self.layout)
         self.listavariedades = self.createVariedades(self.dataframe)
-        print(self.listavariedades)
 
     def leituradados(self, nomearquivo, nomepasta):
         dados = pd.ExcelFile(nomearquivo)
