@@ -128,7 +128,6 @@ class LimiteParametros(PageWindow):
             limiteinf = self.layout2.itemAtPosition(i, 1).widget().text()
             limitesup = self.layout2.itemAtPosition(i, 2).widget().text()
             Otimizacao.parametros[i].setlimites(limiteinf, limitesup)
-            print("o parametro", Otimizacao.parametros[i].nome, "tem limites", Otimizacao.parametros[i].limiteInf, "e", Otimizacao.parametros[i].limiteSup )
 
 
 class SelecaoVariedades(PageWindow, Basedados):
@@ -145,10 +144,11 @@ class SelecaoVariedades(PageWindow, Basedados):
         self.layout2 = QHBoxLayout()
         btnvoltarqnt = QPushButton('Voltar para seleção de limites')
         btnvoltarqnt.clicked.connect(self.goToLimiteParametros)
-        btnlimitepar = QPushButton('Otimizar')
-        btnlimitepar.clicked.connect(self.goToOtimizar)
+        btnotimizar = QPushButton('Otimizar')
+        btnotimizar.clicked.connect(self.inserirvariedades)
+        btnotimizar.clicked.connect(self.goToOtimizar)
         self.layout2.addWidget(btnvoltarqnt)
-        self.layout2.addWidget(btnlimitepar)
+        self.layout2.addWidget(btnotimizar)
         self.layout.addLayout(self.sublayout)
         self.layout.addLayout(self.layout2)
 
@@ -184,6 +184,11 @@ class SelecaoVariedades(PageWindow, Basedados):
             return
         for item in deletelist:
             self.listaselecionadas.takeItem(self.listaselecionadas.row(item))
+
+    def inserirvariedades(self):
+        for i in range(self.listaselecionadas.count()):
+            itematual = self.listaselecionadas.item(i).text()
+            Otimizacao.addvariedade(self.listavariedades[itematual])
 
 
 class Otimizar(PageWindow):
