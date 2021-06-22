@@ -47,7 +47,7 @@ class Selecaoparametros(PageWindow):
         self.layout1.setAlignment(Qt.AlignHCenter)
         self.layoutprincipal.addLayout(self.layout1)
         self.layout2 = QVBoxLayout()
-        parametros = ['Custo', 'pH', 'Ponto de Fusão', 'Ponto de Ebulição', 'Brix', 'Pol', 'Viscosidade', 'Cor']
+        parametros = ['Custo', 'pH', 'Pol', 'Pureza', 'ATR', 'AR', 'Fibra']
         self.listabotoes = []
         for i in range(len(parametros)):
             botao = self.botaocheck(parametros[i])
