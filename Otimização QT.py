@@ -7,6 +7,7 @@ from PyQt5.QtGui import QPalette
 from Simulacao import Simulacao, PaginaInicial
 from BancodeDados import GraficoParametro
 from HistoricoSimulacao import Historicosimulacao
+from Sobre import Sobre
 
 
 class MainWindow(QMainWindow):
@@ -34,11 +35,15 @@ class MainWindow(QMainWindow):
         historicosimuact = QAction('Histórico de Simulações', self)
         historicosimuact.triggered.connect(self.openhistoricosimu)
 
+        sobreact = QAction('Sobre', self)
+        sobreact.triggered.connect(self.opensobre)
+
         menubar = self.menuBar()
 
         menubar.addAction(simulacaoact)
         menubar.addAction(bancodedadosact)
         menubar.addAction(historicosimuact)
+        menubar.addAction(sobreact)
 
     def opennovasimulacao(self):
         t = Simulacao()
@@ -52,6 +57,9 @@ class MainWindow(QMainWindow):
         t = Historicosimulacao()
         self.setCentralWidget(t)
 
+    def opensobre(self):
+        t = Sobre()
+        self.setCentralWidget(t)
 
 app = QApplication(sys.argv)
 app.setStyle('Fusion')
