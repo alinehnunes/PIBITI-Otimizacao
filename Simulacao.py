@@ -23,7 +23,13 @@ class Selecaoparametros(PageWindow):
 
     def botaocheck(self, nome):
         botao = QCheckBox(nome)
-        botao.setCheckState(Qt.Unchecked)
+        botao.setStyleSheet("""
+            QWidget {
+                border: 1px solid black;
+                border-radius: 5px;
+                font-size: 14px;
+                }
+            """)
         return botao
 
     def colocarbotao(self, layout, botao):
@@ -119,6 +125,13 @@ class LimiteParametros(PageWindow):
         self.cleanlayout(self.layout2)
         for i in range(len(Otimizacao.parametros)):
             nomevar = QLabel(Otimizacao.parametros[i].nome)
+            nomevar.setStyleSheet("""
+                        QWidget {
+                            border: 1px solid black;
+                            border-radius: 5px;
+                            font-size: 14px;
+                            }
+                        """)
             limiteinf = QLineEdit()
             limiteinf.setPlaceholderText("Limite Inferior do parâmetro")
             limitesup = QLineEdit()
@@ -127,7 +140,7 @@ class LimiteParametros(PageWindow):
             self.layout2.addWidget(limiteinf, i, 1)
             self.layout2.addWidget(limitesup, i, 2)
             self.layout2.setAlignment(Qt.AlignCenter)
-        self.layoutprincipal.addLayout(self.layout2)
+            self.layoutprincipal.addLayout(self.layout2)
         return QWidget.showEvent(self, ev)
 
     def addlimites(self):
@@ -206,11 +219,13 @@ class Otimizar(PageWindow):
         adjustlabel(info)
         self.layout.addWidget(info)
         self.layout.addStretch(1)
+        self.layout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.layout)
 
     def showEvent(self, ev):
         self.layoutinfos = QVBoxLayout()
         qntparametros = QLabel('Parametros selecionados:')
+        adjustlabel(qntparametros)
         self.layoutinfos.addWidget(qntparametros)
         for i in range(len(Otimizacao.parametros)):
             par = Otimizacao.parametros[i]
@@ -218,14 +233,17 @@ class Otimizar(PageWindow):
             parlimiteinf = str(par.limiteInf)
             parlimitesup = str(par.limiteSup)
             parametrosoti = QLabel(parnome + ':  Limite inferior:  ' + parlimiteinf + ', Limite superiror:  ' + parlimitesup)
+            adjustlabel(parametrosoti)
             self.layoutinfos.addWidget(parametrosoti)
         qntvariedades = QLabel('As variedades escolhidas foram:')
+        adjustlabel(qntvariedades)
         self.layoutinfos.addWidget(qntvariedades)
         for i in range(len(Otimizacao.variedades)):
             var = Otimizacao.variedades[i]
             variedadesoti = QLabel(var.nome)
+            adjustlabel(variedadesoti)
             self.layoutinfos.addWidget(variedadesoti)
-        self.layoutinfos.setAlignment(Qt.AlignVCenter)
+        self.layoutinfos.setAlignment(Qt.AlignCenter)
         self.layout.addLayout(self.layoutinfos)
 
         return QWidget.showEvent(self, ev)
@@ -285,5 +303,11 @@ class PaginaInicial(QWidget):
 
 
 def adjustlabel(lbl):
-    lbl.setFont(QFont('Helvetica', 12))
-    lbl.setFrameStyle(QFrame.Panel)
+    lbl.setStyleSheet("""
+                        QWidget {
+                        font: Helvetica;
+                        border: 1px solid black;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        }
+                    """)
