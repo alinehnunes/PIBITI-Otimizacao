@@ -49,7 +49,6 @@ class GraficoParametro(Basedados):
             if event.type() == QtCore.QEvent.MouseButtonRelease:
                 if event.button() == QtCore.Qt.LeftButton:
                     selectedcolumn = self.tablewidget.currentColumn()
-                    print(f'coluna selecionada é {selectedcolumn}')
                     row = self.tablewidget.rowCount()
                     column = self.tablewidget.columnCount()
                     if selectedcolumn == 0:

@@ -213,6 +213,7 @@ class SelecaoVariedades(PageWindow, Basedados):
             self.listaselecionadas.takeItem(self.listaselecionadas.row(item))
 
     def inserirvariedades(self):
+        Otimizacao.variedades = []
         for i in range(self.listaselecionadas.count()):
             itematual = self.listaselecionadas.item(i).text()
             Otimizacao.addvariedade(self.listavariedades[itematual])
