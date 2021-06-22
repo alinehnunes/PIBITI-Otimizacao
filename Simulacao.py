@@ -44,6 +44,7 @@ class Selecaoparametros(PageWindow):
         self.layout1 = QVBoxLayout()
         self.layout1.addWidget(info)
         self.layout1.addStretch(1)
+        self.layout1.setAlignment(Qt.AlignHCenter)
         self.layoutprincipal.addLayout(self.layout1)
         self.layout2 = QVBoxLayout()
         parametros = ['Custo', 'pH', 'Ponto de Fusão', 'Ponto de Ebulição', 'Brix', 'Pol', 'Viscosidade', 'Cor']
@@ -176,7 +177,13 @@ class SelecaoVariedades(PageWindow, Basedados):
         self.goto("LimiteParametros")
 
     def goToOtimizar(self):
-        self.goto("Otimizar")
+        if self.listaselecionadas.count() == 0:
+            msg = QMessageBox()
+            msg.setWindowTitle("Adicionar Variedades")
+            msg.setText("Favor selecionar no mínimo uma variedade para avançar")
+            msg.exec_()
+        else:
+            self.goto("Otimizar")
 
     def eventFilter(self, source, event):
         if self.tablewidget.selectedIndexes() != []:
