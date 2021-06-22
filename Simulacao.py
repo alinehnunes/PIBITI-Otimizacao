@@ -135,8 +135,10 @@ class LimiteParametros(PageWindow):
                         """)
             limiteinf = QLineEdit()
             limiteinf.setPlaceholderText("Limite Inferior do parâmetro")
+            adjustlineedit(limiteinf)
             limitesup = QLineEdit()
             limitesup.setPlaceholderText("Limite Superior do parâmetro")
+            adjustlineedit(limitesup)
             self.layout2.addWidget(nomevar, i, 0)
             self.layout2.addWidget(limiteinf, i, 1)
             self.layout2.addWidget(limitesup, i, 2)
@@ -319,3 +321,14 @@ def adjustlabel(lbl):
                         font-size: 14px;
                         }
                     """)
+
+
+def adjustlineedit(lineedit):
+    lineedit.setStyleSheet("""
+                            border: 1px solid gray;
+                            border-radius: 20px;
+                            padding: 8px;
+                            background: gray;
+                            selection - background - color: darkgray;
+                            }
+                        """)
