@@ -56,10 +56,10 @@ class Selecaoparametros(PageWindow):
 
         self.layout2.setAlignment(Qt.AlignLeft)
         self.layout2.addStretch(1)
-        btnvariedades = QPushButton("Escolher Limites")
-        btnvariedades.clicked.connect(self.checarselecionados)
+        btnlimites = QPushButton("Escolher Limites")
+        btnlimites.clicked.connect(self.checarselecionados)
         self.layoutprincipal.addLayout(self.layout2)
-        self.layoutprincipal.addWidget(btnvariedades)
+        self.layoutprincipal.addWidget(btnlimites)
         self.setLayout(self.layoutprincipal)
 
     def checarselecionados(self):
@@ -71,10 +71,7 @@ class Selecaoparametros(PageWindow):
                 Otimizacao.addparametro(param)
                 checkedbuttons.append(botao)
         if len(checkedbuttons) == 0:
-            msg = QMessageBox()
-            msg.setWindowTitle("Adicionar Parametros")
-            msg.setText("Favor selecionar no mínimo um parâmetro para avançar")
-            msg.exec_()
+            createmessage("Adicionar Parametros", "Favor selecionar no mínimo um parâmetro para avançar")
         else:
             self.goToLimiteParametros()
 
@@ -118,8 +115,11 @@ class LimiteParametros(PageWindow):
         self.goto("SelecaoParametros")
 
     def goToSelecaoVariedades(self):
-        self.goto("SelecaoVariedades")
-        self.addlimites()
+        if self.checarlimites():
+            self.addlimites()
+            self.goto("SelecaoVariedades")
+        else:
+            pass
 
     def showEvent(self, ev):
 
@@ -152,6 +152,27 @@ class LimiteParametros(PageWindow):
             limitesup = self.layout2.itemAtPosition(i, 2).widget().text()
             Otimizacao.parametros[i].setlimites(limiteinf, limitesup)
 
+    def checarlimites(self):
+        for i in range(len(Otimizacao.parametros)):
+            limiteinf = self.layout2.itemAtPosition(i, 1).widget().text()
+            limitesup = self.layout2.itemAtPosition(i, 2).widget().text()
+            check = self.isvalid(limiteinf)
+            check2 = self.isvalid(limitesup)
+            if not (check and check2):
+                createmessage("Tipo inválido","Favor utilizar apenas números nos campos de limites")
+                return False
+        return True
+
+    def isvalid(self, resposta):
+        if resposta == '':
+            return True
+        else:
+            try:
+                float(resposta)
+                return True
+            except:
+                return False
+
 
 class SelecaoVariedades(PageWindow, Basedados):
     def __init__(self, nomearquivo, nomeplanilha, parent=None):
@@ -180,10 +201,7 @@ class SelecaoVariedades(PageWindow, Basedados):
 
     def goToOtimizar(self):
         if self.listaselecionadas.count() == 0:
-            msg = QMessageBox()
-            msg.setWindowTitle("Adicionar Variedades")
-            msg.setText("Favor selecionar no mínimo uma variedade para avançar")
-            msg.exec_()
+            createmessage("Adicionar Variedades", "Favor selecionar no mínimo uma variedade para avançar")
         else:
             self.goto("Otimizar")
 
@@ -332,3 +350,10 @@ def adjustlineedit(lineedit):
                             selection - background - color: darkgray;
                             }
                         """)
+
+
+def createmessage(titulo, message):
+    msg = QMessageBox()
+    msg.setWindowTitle(titulo)
+    msg.setText(message)
+    msg.exec_()
