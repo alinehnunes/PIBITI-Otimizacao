@@ -159,7 +159,10 @@ class LimiteParametros(PageWindow):
             check = self.isvalid(limiteinf)
             check2 = self.isvalid(limitesup)
             if not (check and check2):
-                createmessage("Tipo inválido","Favor utilizar apenas números nos campos de limites")
+                createmessage("Tipo inválido", "Favor utilizar apenas números nos campos de limites")
+                return False
+            if limiteinf > limitesup:
+                createmessage("Erro Matemático", f'"Limite inferior do parâmetro {Otimizacao.parametros[i].nome} maior que o limite superior"')
                 return False
         return True
 
