@@ -23,13 +23,7 @@ class Selecaoparametros(PageWindow):
 
     def botaocheck(self, nome):
         botao = QCheckBox(nome)
-        botao.setStyleSheet("""
-            QWidget {
-                border: 1px solid black;
-                border-radius: 5px;
-                font-size: 14px;
-                }
-            """)
+        adjustbotao(botao)
         return botao
 
     def colocarbotao(self, layout, botao):
@@ -54,7 +48,7 @@ class Selecaoparametros(PageWindow):
             self.colocarbotao(self.layout2, botao)
             self.listabotoes.append(botao)
 
-        self.layout2.setAlignment(Qt.AlignLeft)
+        #self.layout2.setAlignment(Qt.AlignLeft)
         self.layout2.addStretch(1)
         btnlimites = QPushButton("Escolher Limites")
         btnlimites.clicked.connect(self.checarselecionados)
@@ -126,11 +120,13 @@ class LimiteParametros(PageWindow):
         self.cleanlayout(self.layout2)
         for i in range(len(Otimizacao.parametros)):
             nomevar = QLabel(Otimizacao.parametros[i].nome)
+            nomevar.setAlignment(Qt.AlignCenter)
             nomevar.setStyleSheet("""
                         QWidget {
                             border: 1px solid black;
                             border-radius: 5px;
                             font-size: 14px;
+                            padding: 5px;
                             }
                         """)
             limiteinf = QLineEdit()
@@ -162,7 +158,7 @@ class LimiteParametros(PageWindow):
                 createmessage("Tipo inválido", "Favor utilizar apenas números nos campos de limites")
                 return False
             if limiteinf > limitesup:
-                createmessage("Erro Matemático", f'"Limite inferior do parâmetro {Otimizacao.parametros[i].nome} maior que o limite superior"')
+                createmessage("Erro Matemático", f'Limite inferior do parâmetro {Otimizacao.parametros[i].nome} maior que o limite superior')
                 return False
         return True
 
@@ -264,7 +260,7 @@ class Otimizar(PageWindow):
             parlimiteinf = str(par.limiteInf)
             parlimitesup = str(par.limiteSup)
             parametrosoti = QLabel(parnome + ':  Limite inferior:  ' + parlimiteinf + ', Limite superiror:  ' + parlimitesup)
-            adjustlabel(parametrosoti)
+            adjustbotao(parametrosoti)
             self.layoutinfos.addWidget(parametrosoti)
         qntvariedades = QLabel('As variedades escolhidas foram:')
         adjustlabel(qntvariedades)
@@ -272,7 +268,7 @@ class Otimizar(PageWindow):
         for i in range(len(Otimizacao.variedades)):
             var = Otimizacao.variedades[i]
             variedadesoti = QLabel(var.nome)
-            adjustlabel(variedadesoti)
+            adjustbotao(variedadesoti)
             self.layoutinfos.addWidget(variedadesoti)
         self.layoutinfos.setAlignment(Qt.AlignCenter)
         self.layout.addLayout(self.layoutinfos)
@@ -346,14 +342,26 @@ def adjustlabel(lbl):
 
 def adjustlineedit(lineedit):
     lineedit.setStyleSheet("""
-                            border: 1px solid gray;
-                            border-radius: 20px;
+                            border: 1px solid black;
+                            border-radius: 15px;
                             padding: 8px;
                             background: gray;
                             selection - background - color: darkgray;
                             }
                         """)
 
+
+def adjustbotao(botao):
+    botao.setStyleSheet("""
+        QWidget {
+            border: 2px solid white;
+            border-radius: 5px;
+            min-width: 200px;
+            max-width: 400px;
+            font-size: 14px;
+            padding: 5px;
+            }
+        """)
 
 def createmessage(titulo, message):
     msg = QMessageBox()
