@@ -8,6 +8,7 @@ from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QWidget
 from BaseDados import Basedados
 from ParametrosOtimizacao import Otimizacao, Parametro
+import math
 
 Otimizacao = Otimizacao()
 
@@ -146,28 +147,41 @@ class LimiteParametros(PageWindow):
         for i in range(len(Otimizacao.parametros)):
             limiteinf = self.layout2.itemAtPosition(i, 1).widget().text()
             limitesup = self.layout2.itemAtPosition(i, 2).widget().text()
+            if limiteinf == '':
+                limiteinf = -math.inf
+            if limitesup == '':
+                limitesup = math.inf
+            limiteinf = float(limiteinf)
+            limitesup = float(limitesup)
             Otimizacao.parametros[i].setlimites(limiteinf, limitesup)
 
     def checarlimites(self):
         for i in range(len(Otimizacao.parametros)):
             limiteinf = self.layout2.itemAtPosition(i, 1).widget().text()
             limitesup = self.layout2.itemAtPosition(i, 2).widget().text()
-            check = self.isvalid(limiteinf)
-            check2 = self.isvalid(limitesup)
-            if not (check and check2):
+            if limiteinf == '':
+                limiteinf = -math.inf
+            if limitesup == '':
+                limitesup = math.inf
+            check = self.isvalid(limiteinf, limitesup)
+            if not check:
                 createmessage("Tipo inválido", "Favor utilizar apenas números nos campos de limites")
                 return False
-            if limiteinf > limitesup:
-                createmessage("Erro Matemático", f'Limite inferior do parâmetro {Otimizacao.parametros[i].nome} maior que o limite superior')
-                return False
+            if check:
+                limiteinf = float(limiteinf)
+                limitesup = float(limitesup)
+                if limiteinf > limitesup:
+                    createmessage("Erro Matemático", f'Limite inferior do parâmetro {Otimizacao.parametros[i].nome} maior que o limite superior')
+                    return False
         return True
 
-    def isvalid(self, resposta):
-        if resposta == '':
+    def isvalid(self, resposta1, resposta2):
+        if resposta1 == '' or resposta2 == '':
             return True
         else:
             try:
-                float(resposta)
+                float(resposta1)
+                float(resposta2)
                 return True
             except:
                 return False
