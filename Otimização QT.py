@@ -17,6 +17,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle('Otimização Cana de Açúcar')
         self.setGeometry(400, 200, 600, 400)
+        #self.setStyleSheet("background-color: #d3d3d3;")
 
         self.createmenubar()
 
