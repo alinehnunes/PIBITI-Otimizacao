@@ -34,6 +34,16 @@ def custo(x):
     custo = [custo+(teste_otm.variedades[i].custo*x[i]) for i in range(qtdvariedades)]
     return (-1)*custo
 
+#restrição pH limite inferior
+def ph1(x):
+    ph = [ph+(teste_otm.variedades[i].ph*x[i]) for i in range(qtdvariedades)]
+    return ph - Parametro("ph").limiteInf
+
+#restrição pH limite superior
+def ph2(x):
+    ph = [ph+(teste_otm.variedades[i].ph*x[i]) for i in range(qtdvariedades)]
+    return Parametro("ph").limiteSup - ph
+
 #restrição pol limite inferior
 def pol1(x):
     pol = [pol+(teste_otm.variedades[i].pol*x[i]) for i in range(qtdvariedades)]
@@ -88,6 +98,8 @@ def composicao(x):
     return sum(x) - 1
 
 #restrições
+ph1 = {'type': 'ineq', 'fun': ph1}
+ph2 = {'type': 'ineq', 'fun': ph2}
 pol1 = {'type': 'ineq', 'fun': pol1}
 pol2 = {'type': 'ineq', 'fun': pol2}
 pureza1 = {'type': 'ineq', 'fun': pureza1}
@@ -100,7 +112,34 @@ fibra1 = {'type': 'ineq', 'fun': fibra1}
 fibra2 = {'type': 'ineq', 'fun': fibra2}
 composicao = {'type': 'eq', 'fun': composicao}
 
-restricoes = [pol1, pol2, pureza1, pureza2, atr1, atr2, ar1, ar2, fibra1, fibra2, composicao]
+restricoes = {}
+
+'pH', 'Pol', 'Pureza', 'ATR', 'AR', 'Fibra'
+
+for i in range teste_otm.parametros:
+    if i == 'pH':
+        restricoes.append(ph1)
+        restricoes.append(ph2)
+
+    if i == 'Pol':
+        restricoes.append(pol1)
+        restricoes.append(pol2)
+
+    if i == 'Pureza':
+        restricoes.append(pureza1)
+        restricoes.append(pureza2)
+
+    if i == 'ATR':
+        restricoes.append(atr1)
+        restricoes.append(atr2)
+
+    if i == 'AR':
+        restricoes.append(ar1)
+        restricoes.append(ar2)
+
+    if i == 'Fibra':
+        restricoes.append(fibra1)
+        restricoes.append(fibra2)
 
 solucao = minimize(custo, x0, method='SLSQP', bounds=limites, constraints=restricoes)
 print(solucao)
