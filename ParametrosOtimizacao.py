@@ -1,4 +1,5 @@
 from math import inf
+import mongoengine
 
 
 class Parametro:
@@ -11,7 +12,8 @@ class Parametro:
         self.limiteInf = linf
         self.limiteSup = lsup
 
-class Otimizacao:
+
+class Otimizacao(mongoengine.Document):
     def __init__(self):
         self.parametros = []
         self.qntvariedades = 0
