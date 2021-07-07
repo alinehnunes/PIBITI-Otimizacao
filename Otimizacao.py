@@ -114,8 +114,6 @@ composicao = {'type': 'eq', 'fun': composicao}
 
 restricoes = {}
 
-'pH', 'Pol', 'Pureza', 'ATR', 'AR', 'Fibra'
-
 for i in range teste_otm.parametros:
     if i == 'pH':
         restricoes.append(ph1)
