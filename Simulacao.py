@@ -8,10 +8,10 @@ from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QWidget
 from BaseDados import Basedados
 from ParametrosOtimizacao import Otimizacao, Parametro
+from Otimizacao import otimizar
 import math
 
 Otimizacao = Otimizacao()
-
 
 class PageWindow(QWidget):
     gotoSignal = QtCore.pyqtSignal(str)
@@ -203,6 +203,8 @@ class SelecaoVariedades(PageWindow, Basedados):
         btnvoltarqnt.clicked.connect(self.goToLimiteParametros)
         btnotimizar = QPushButton('Otimizar')
         btnotimizar.clicked.connect(self.inserirvariedades)
+        #conectar otimizacao
+        btnotimizar.clicked.connect(otimizar)
         btnotimizar.clicked.connect(self.goToOtimizar)
         self.layout2.addWidget(btnvoltarqnt)
         self.layout2.addWidget(btnotimizar)
@@ -262,6 +264,7 @@ class Otimizar(PageWindow):
         self.layout.addStretch(1)
         self.layout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.layout)
+
 
     def showEvent(self, ev):
         self.layoutinfos = QVBoxLayout()
