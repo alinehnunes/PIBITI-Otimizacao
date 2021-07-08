@@ -6,15 +6,13 @@ from ParametrosOtimizacao import Otimizacao
 from ParametrosOtimizacao import Parametro
 
 def otimizar():
-    print("inicio otimizacao")
     objeto_otimizacao = Otimizacao()
-    objeto_otimizacao.setqtdvariedades(3)
-
     qtdvariedades = objeto_otimizacao.qtdvariedades
 
     # Chute inicial
     x0 = np.zeros(qtdvariedades)
-    x_inicial = 1/qtdvariedades
+    #x_inicial = 1/qtdvariedades
+    x_inicial = 0.5
 
     x0 = [x_inicial for i in range(qtdvariedades)] 
 
@@ -23,78 +21,72 @@ def otimizar():
     UB = np.ones(qtdvariedades)
     limites = Bounds(LB, UB)
 
-    custo = 0
-    pol = 0
-    pureza = 0 
-    atr = 0 
-    ar = 0 
-    fibra = 0
-
     # Definição da função Objetivo - CUSTO (minimizar)
     #def custo(x,objeto_otimizacao,custo):
     def custo(x):
-        custo = [custo+(objeto_otimizacao.variedades[i].custo*x[i]) for i in range(qtdvariedades)]
-        return (-1)*custo
+        custo = [(objeto_otimizacao.variedades[i].custo*x[i]) for i in range(qtdvariedades)]
+        return (-1)*sum(custo)
 
     #restrição pH limite inferior
     def ph1(x):
-        ph = [ph+(objeto_otimizacao.variedades[i].ph*x[i]) for i in range(qtdvariedades)]
-        return ph - Parametro("ph").limiteInf
+        print("entrou ph")
+        ph = [(objeto_otimizacao.variedades[i].ph*x[i]) for i in range(qtdvariedades)]
+        return sum(ph) - Parametro("ph").limiteInf
 
     #restrição pH limite superior
     def ph2(x):
-        ph = [ph+(objeto_otimizacao.variedades[i].ph*x[i]) for i in range(qtdvariedades)]
-        return Parametro("ph").limiteSup - ph
+        ph = [(objeto_otimizacao.variedades[i].ph*x[i]) for i in range(qtdvariedades)]
+        return Parametro("ph").limiteSup - sum(ph)
 
     #restrição pol limite inferior
     def pol1(x):
-        pol = [pol+(objeto_otimizacao.variedades[i].pol*x[i]) for i in range(qtdvariedades)]
-        return pol - Parametro("pol").limiteInf
+        pol = [(objeto_otimizacao.variedades[i].pol*x[i]) for i in range(qtdvariedades)]
+        return sum(pol) - Parametro("pol").limiteInf
 
     #restrição pol limite superior
     def pol2(x):
-        pol = [pol+(objeto_otimizacao.variedades[i].pol*x[i]) for i in range(qtdvariedades)]
-        return Parametro("pol").limiteSup - pol
+        pol = [(objeto_otimizacao.variedades[i].pol*x[i]) for i in range(qtdvariedades)]
+        return Parametro("pol").limiteSup - sum(pol)
 
     #restrição pureza limite inferior
     def pureza1(x):
-        pureza = [pureza+(objeto_otimizacao.variedades[i].pureza*x[i]) for i in range(qtdvariedades)]
-        return pureza - Parametro("pureza").limiteInf
+        pureza = [(objeto_otimizacao.variedades[i].pureza*x[i]) for i in range(qtdvariedades)]
+        return sum(pureza) - Parametro("pureza").limiteInf
 
     #restrição pureza limite superior
     def pureza2(x):
-        pureza = [pureza+(objeto_otimizacao.variedades[i].pureza*x[i]) for i in range(qtdvariedades)]
-        return Parametro("pureza").limiteSup - pureza
+        pureza = [(objeto_otimizacao.variedades[i].pureza*x[i]) for i in range(qtdvariedades)]
+        return Parametro("pureza").limiteSup - sum(pureza)
 
     #restrição atr limite inferior
     def atr1(x):
-        atr = [atr+(objeto_otimizacao.variedades[i].atr*x[i]) for i in range(qtdvariedades)]
-        return atr - Parametro("atr").limiteInf
+        atr = [(objeto_otimizacao.variedades[i].atr*x[i]) for i in range(qtdvariedades)]
+        return sum(atr) - Parametro("atr").limiteInf
 
     #restrição atr limite superior
     def atr2(x):
-        atr = [atr+(objeto_otimizacao.variedades[i].atr*x[i]) for i in range(qtdvariedades)]
-        return Parametro("atr").limiteSup - atr
+        atr = [(objeto_otimizacao.variedades[i].atr*x[i]) for i in range(qtdvariedades)]
+        return Parametro("atr").limiteSup - sum(atr)
 
     #restrição ar limite inferior
     def ar1(x):
-        ar = [ar+(objeto_otimizacao.variedades[i].ar*x[i]) for i in range(qtdvariedades)]
-        return ar - Parametro("ar").limiteInf
+        ar = [(objeto_otimizacao.variedades[i].ar*x[i]) for i in range(qtdvariedades)]
+        return sum(ar) - Parametro("ar").limiteInf
 
     #restrição atr limite superior
     def ar2(x):
-        ar = [ar+(objeto_otimizacao.variedades[i].ar*x[i]) for i in range(qtdvariedades)]
-        return Parametro("ar").limiteSup - ar
+        ar = [(objeto_otimizacao.variedades[i].ar*x[i]) for i in range(qtdvariedades)]
+        return Parametro("ar").limiteSup - sum(ar)
 
     #restrição fibra limite inferior
     def fibra1(x):
         fibra = [fibra+(objeto_otimizacao.variedades[i].fibra*x[i]) for i in range(qtdvariedades)]
-        return fibra - Parametro("fibra").limiteInf
+        return sum(fibra) - Parametro("fibra").limiteInf
 
     #restrição fibra limite superior
     def fibra2(x):
         fibra = [fibra+(objeto_otimizacao.variedades[i].fibra*x[i]) for i in range(qtdvariedades)]
-        return Parametro("fibra").limiteSup - fibra
+        return Parametro("fibra").limiteSup - sum(fibra)
 
     def composicao(x):
         return sum(x) - 1
@@ -114,7 +106,7 @@ def otimizar():
     fibra2 = {'type': 'ineq', 'fun': fibra2}
     composicao = {'type': 'eq', 'fun': composicao}
 
-    restricoes = {}
+    restricoes = []
 
     for i in range(len(objeto_otimizacao.parametros)):
         if objeto_otimizacao.parametros[i] == 'pH':
@@ -141,5 +133,8 @@ def otimizar():
             restricoes.append(fibra1)
             restricoes.append(fibra2)
 
-    solucao = minimize(custo, x0, method='SLSQP', bounds=limites, constraints=restricoes)
+
+    #restricoes1 = [ph1, ph2, pol1, pol2, atr1, atr2, ar1, ar2, pureza1, pureza2, fibra1, fibra2]
+
+    solucao = minimize(custo, x0, method='SLSQP', bounds=limites, constraints=restricoes1)
     print(solucao)
