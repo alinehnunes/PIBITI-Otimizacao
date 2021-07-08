@@ -203,13 +203,15 @@ class SelecaoVariedades(PageWindow, Basedados):
         btnvoltarqnt.clicked.connect(self.goToLimiteParametros)
         btnotimizar = QPushButton('Otimizar')
         btnotimizar.clicked.connect(self.inserirvariedades)
-        #conectar otimizacao
-        btnotimizar.clicked.connect(otimizar)
+        btnotimizar.clicked.connect(self.conectarotimizacao)
         btnotimizar.clicked.connect(self.goToOtimizar)
         self.layout2.addWidget(btnvoltarqnt)
         self.layout2.addWidget(btnotimizar)
         self.layout.addLayout(self.sublayout)
         self.layout.addLayout(self.layout2)
+
+    def conectarotimizacao(self):
+        otimizar(Otimizacao)
 
     def goToLimiteParametros(self):
         self.goto("LimiteParametros")
