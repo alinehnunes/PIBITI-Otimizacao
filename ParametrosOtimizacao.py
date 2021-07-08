@@ -16,7 +16,7 @@ class Parametro:
 class Otimizacao(mongoengine.Document):
     def __init__(self):
         self.parametros = []
-        self.qntvariedades = 0
+        self.qtdvariedades = 0
         self.variedades = []
 
     def addparametro(self, parametro):
