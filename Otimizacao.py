@@ -5,8 +5,8 @@ from scipy.optimize import minimize
 from ParametrosOtimizacao import Otimizacao
 from ParametrosOtimizacao import Parametro
 
-def otimizar():
-    objeto_otimizacao = Otimizacao()
+def otimizar(objeto_otimizacao):
+    #objeto_otimizacao = Otimizacao()
     qtdvariedades = objeto_otimizacao.qtdvariedades
 
     # Chute inicial
@@ -136,5 +136,5 @@ def otimizar():
 
     #restricoes1 = [ph1, ph2, pol1, pol2, atr1, atr2, ar1, ar2, pureza1, pureza2, fibra1, fibra2]
 
-    solucao = minimize(custo, x0, method='SLSQP', bounds=limites, constraints=restricoes1)
+    solucao = minimize(custo, x0, method='SLSQP', bounds=limites, constraints=restricoes)
     print(solucao)
