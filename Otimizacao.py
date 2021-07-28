@@ -7,7 +7,7 @@ from ParametrosOtimizacao import Parametro
 
 def otimizar(objeto_otimizacao):
     #objeto_otimizacao = Otimizacao()
-    qtdvariedades = objeto_otimizacao.qtdvariedades
+    qtdvariedades = objeto_otimizacao.getqtdvariedades()
 
     # Chute inicial
     x0 = np.zeros(qtdvariedades)

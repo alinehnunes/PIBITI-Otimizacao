@@ -25,5 +25,6 @@ class Otimizacao(mongoengine.Document):
     def addvariedade(self, variedade):
         self.variedades.append(variedade)
 
-    def setqtdvariedades(self, qtdvariedades):
-        self.qtdvariedades = qtdvariedades
+    def getqtdvariedades(self):
+        self.qtdvariedades = len(self.variedades)
+        return self.qtdvariedades

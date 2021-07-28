@@ -49,7 +49,6 @@ class Selecaoparametros(PageWindow):
             self.colocarbotao(self.layout2, botao)
             self.listabotoes.append(botao)
 
-        #self.layout2.setAlignment(Qt.AlignLeft)
         self.layout2.addStretch(1)
         btnlimites = QPushButton("Escolher Limites")
         btnlimites.clicked.connect(self.checarselecionados)
@@ -202,7 +201,6 @@ class SelecaoVariedades(PageWindow, Basedados):
         btnvoltarqnt = QPushButton('Voltar para seleção de limites')
         btnvoltarqnt.clicked.connect(self.goToLimiteParametros)
         btnotimizar = QPushButton('Otimizar')
-        btnotimizar.clicked.connect(self.inserirvariedades)
         btnotimizar.clicked.connect(self.conectarotimizacao)
         btnotimizar.clicked.connect(self.goToOtimizar)
         self.layout2.addWidget(btnvoltarqnt)
@@ -211,6 +209,11 @@ class SelecaoVariedades(PageWindow, Basedados):
         self.layout.addLayout(self.layout2)
 
     def conectarotimizacao(self):
+        Otimizacao.variedades = []
+        for i in range(self.listaselecionadas.count()):
+            itematual = self.listaselecionadas.item(i).text()
+            Otimizacao.addvariedade(self.listavariedades[itematual])
+        print(Otimizacao.variedades)
         otimizar(Otimizacao)
 
     def goToLimiteParametros(self):
@@ -254,6 +257,7 @@ class SelecaoVariedades(PageWindow, Basedados):
         for i in range(self.listaselecionadas.count()):
             itematual = self.listaselecionadas.item(i).text()
             Otimizacao.addvariedade(self.listavariedades[itematual])
+        print(Otimizacao.variedades)
 
 
 class Otimizar(PageWindow):
