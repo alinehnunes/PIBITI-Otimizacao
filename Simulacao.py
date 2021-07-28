@@ -213,8 +213,7 @@ class SelecaoVariedades(PageWindow, Basedados):
         for i in range(self.listaselecionadas.count()):
             itematual = self.listaselecionadas.item(i).text()
             Otimizacao.addvariedade(self.listavariedades[itematual])
-        print(Otimizacao.variedades)
-        otimizar(Otimizacao)
+        #otimizar(Otimizacao)
 
     def goToLimiteParametros(self):
         self.goto("LimiteParametros")
@@ -251,13 +250,6 @@ class SelecaoVariedades(PageWindow, Basedados):
             return
         for item in deletelist:
             self.listaselecionadas.takeItem(self.listaselecionadas.row(item))
-
-    def inserirvariedades(self):
-        Otimizacao.variedades = []
-        for i in range(self.listaselecionadas.count()):
-            itematual = self.listaselecionadas.item(i).text()
-            Otimizacao.addvariedade(self.listavariedades[itematual])
-        print(Otimizacao.variedades)
 
 
 class Otimizar(PageWindow):
