@@ -1,10 +1,7 @@
-import sys
-from random import randint
-
 from PyQt5.QtWidgets import *
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget
 from BaseDados import Basedados
 from ParametrosOtimizacao import Otimizacao, Parametro
@@ -170,7 +167,8 @@ class LimiteParametros(PageWindow):
                 limiteinf = float(limiteinf)
                 limitesup = float(limitesup)
                 if limiteinf > limitesup:
-                    createmessage("Erro Matemático", f'Limite inferior do parâmetro {Otimizacao.parametros[i].nome} maior que o limite superior')
+                    createmessage("Erro Matemático", f'Limite inferior do parâmetro {Otimizacao.parametros[i].nome} '
+                                                     f'maior que o limite superior')
                     return False
         return True
 
@@ -213,7 +211,7 @@ class SelecaoVariedades(PageWindow, Basedados):
         for i in range(self.listaselecionadas.count()):
             itematual = self.listaselecionadas.item(i).text()
             Otimizacao.addvariedade(self.listavariedades[itematual])
-        #otimizar(Otimizacao)
+        # otimizar(Otimizacao)
 
     def goToLimiteParametros(self):
         self.goto("LimiteParametros")
@@ -261,8 +259,13 @@ class Otimizar(PageWindow):
         self.layout.addWidget(info)
         self.layout.addStretch(1)
         self.layout.setAlignment(Qt.AlignCenter)
+        self.sublayout = QHBoxLayout()
+        btnsalvar = QPushButton('Salvar Simulação')
+        btnvoltarinicio = QPushButton('Retornar ao início')
+        btnvoltarinicio.clicked.connect(self.close)
+        self.sublayout.addWidget(btnsalvar)
+        self.sublayout.addWidget(btnvoltarinicio)
         self.setLayout(self.layout)
-
 
     def showEvent(self, ev):
         self.layoutinfos = QVBoxLayout()
@@ -274,7 +277,8 @@ class Otimizar(PageWindow):
             parnome = str(par.nome)
             parlimiteinf = str(par.limiteInf)
             parlimitesup = str(par.limiteSup)
-            parametrosoti = QLabel(parnome + ':  Limite inferior:  ' + parlimiteinf + ', Limite superiror:  ' + parlimitesup)
+            parametrosoti = QLabel(parnome + ':  Limite inferior:  ' + parlimiteinf + ', Limite superiror:  ' +
+                                   parlimitesup)
             adjustbotao(parametrosoti)
             self.layoutinfos.addWidget(parametrosoti)
         qntvariedades = QLabel('As variedades escolhidas foram:')
@@ -287,9 +291,17 @@ class Otimizar(PageWindow):
             self.layoutinfos.addWidget(variedadesoti)
         self.layoutinfos.setAlignment(Qt.AlignCenter)
         self.layout.addLayout(self.layoutinfos)
+        self.layout.addLayout(self.sublayout)
 
         return QWidget.showEvent(self, ev)
 
+    def closeEvent(self, a0: QtGui.QCloseEvent):
+        print('Fechou')
+        self.abrirpaginainicial()
+
+    def abrirpaginainicial(self):
+        from OtimizacaoQT import w
+        w.acaopaginainicial()
 
 class Simulacao(QWidget):
     def __init__(self, parent=None):
@@ -301,7 +313,6 @@ class Simulacao(QWidget):
         self.layout.addWidget(self.stacked_widget)
 
         self.m_pages = {}
-
         self.register(Selecaoparametros(), "SelecaoParametros")
         self.register(SelecaoVariedades("Base de dados inicial.xls", "Planilha1"), "SelecaoVariedades")
         self.register(LimiteParametros(), "LimiteParametros")
@@ -309,7 +320,6 @@ class Simulacao(QWidget):
 
         self.goto("SelecaoParametros")
         self.setLayout(self.layout)
-
 
     def register(self, widget, name):
         self.m_pages[name] = widget
@@ -377,6 +387,7 @@ def adjustbotao(botao):
             padding: 5px;
             }
         """)
+
 
 def createmessage(titulo, message):
     msg = QMessageBox()

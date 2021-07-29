@@ -17,13 +17,15 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle('Otimização Cana de Açúcar')
         self.setGeometry(400, 200, 600, 400)
-        #self.setStyleSheet("background-color: #d3d3d3;")
 
+        self.paginainicialact = QAction('Pagina Inicial', self)
+        self.paginainicialact.triggered.connect(self.openpaginainicial)
+
+        self.acaopaginainicial()
         self.createmenubar()
 
-        t = PaginaInicial()
-        self.setCentralWidget(t)
-
+    def acaopaginainicial(self):
+        self.paginainicialact.triggered.emit()
 
     def createmenubar(self):
         simulacaoact = QAction('Nova Simulação', self)
@@ -45,6 +47,10 @@ class MainWindow(QMainWindow):
         menubar.addAction(historicosimuact)
         menubar.addAction(sobreact)
 
+    def openpaginainicial(self):
+        t = PaginaInicial()
+        self.setCentralWidget(t)
+
     def opennovasimulacao(self):
         t = Simulacao()
         self.setCentralWidget(t)
@@ -60,6 +66,7 @@ class MainWindow(QMainWindow):
     def opensobre(self):
         t = Sobre()
         self.setCentralWidget(t)
+
 
 app = QApplication(sys.argv)
 app.setStyle('Fusion')
