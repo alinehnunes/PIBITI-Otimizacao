@@ -199,7 +199,6 @@ class SelecaoVariedades(PageWindow, Basedados):
         btnvoltarqnt = QPushButton('Voltar para seleção de limites')
         btnvoltarqnt.clicked.connect(self.goToLimiteParametros)
         btnotimizar = QPushButton('Otimizar')
-        btnotimizar.clicked.connect(self.conectarotimizacao)
         btnotimizar.clicked.connect(self.goToOtimizar)
         self.layout2.addWidget(btnvoltarqnt)
         self.layout2.addWidget(btnotimizar)
@@ -211,7 +210,7 @@ class SelecaoVariedades(PageWindow, Basedados):
         for i in range(self.listaselecionadas.count()):
             itematual = self.listaselecionadas.item(i).text()
             Otimizacao.addvariedade(self.listavariedades[itematual])
-        # otimizar(Otimizacao)
+        otimizar(Otimizacao)
 
     def goToLimiteParametros(self):
         self.goto("LimiteParametros")
@@ -220,6 +219,7 @@ class SelecaoVariedades(PageWindow, Basedados):
         if self.listaselecionadas.count() == 0:
             createmessage("Adicionar Variedades", "Favor selecionar no mínimo uma variedade para avançar")
         else:
+            self.conectarotimizacao()
             self.goto("Otimizar")
 
     def eventFilter(self, source, event):
