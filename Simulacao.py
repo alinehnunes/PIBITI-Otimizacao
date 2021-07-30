@@ -179,7 +179,7 @@ class LimiteParametros(PageWindow):
 
                 print(f'Inf: {Otimizacao.parametros[i].limiteInf}')
                 print(f'Sup: {Otimizacao.parametros[i].limiteSup}')
-                
+
                 if Otimizacao.parametros[i].limiteInf > Otimizacao.parametros[i].limiteSup:
                     print('entrou')
                     createmessage("Erro Matemático", f'Limite inferior do parâmetro {Otimizacao.parametros[i].nome} '
@@ -299,17 +299,17 @@ class Otimizar(PageWindow):
             adjustbotao(parametrosoti)
             self.layoutinfos.addWidget(parametrosoti)
 
-        qntvariedades = QLabel('As variedades escolhidas foram:')
+        qntvariedades = QLabel('Composições das variedades escolhidas:')
         adjustlabel(qntvariedades)
         self.layoutinfos.addWidget(qntvariedades)
         for i in range(len(Otimizacao.variedades)):
             var = Otimizacao.variedades[i]
-            variedadesoti = QLabel(var.nome)
+            variedadesoti = QLabel(var.nome + ': ' + str(round(Otimizacao.resultado['x'][i]*100,2)) + '%')
             adjustbotao(variedadesoti)
             self.layoutinfos.addWidget(variedadesoti)
 
         #Resultado da otimizacão
-        parametros_resultado = QLabel('Valores do parâmetros:')
+        parametros_resultado = QLabel('Valores dos parâmetros:')
         adjustlabel(parametros_resultado)
         self.layoutinfos.addWidget(parametros_resultado)
 
