@@ -188,8 +188,7 @@ def otimizar(objeto_otimizacao):
                  'pureza': pureza,
                  'atr': atr,
                  'ar': ar,
-                 'fibra': fibra}
-
-    print(resultado['x'])
-
+                 'fibra': fibra,
+                 'success': solucao.success}
+                 
     return resultado

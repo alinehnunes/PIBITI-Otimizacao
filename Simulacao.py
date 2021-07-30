@@ -177,11 +177,11 @@ class LimiteParametros(PageWindow):
                                                      f'maior que o limite superior')
                     return False
 
-                print(f'Inf: {Otimizacao.parametros[i].limiteInf}')
-                print(f'Sup: {Otimizacao.parametros[i].limiteSup}')
+                #print(f'Inf: {Otimizacao.parametros[i].limiteInf}')
+                #print(f'Sup: {Otimizacao.parametros[i].limiteSup}')
 
                 if Otimizacao.parametros[i].limiteInf > Otimizacao.parametros[i].limiteSup:
-                    print('entrou')
+                    #print('entrou')
                     createmessage("Erro Matemático", f'Limite inferior do parâmetro {Otimizacao.parametros[i].nome} '
                                                      f'maior que o limite superior')
                     return False
@@ -286,6 +286,16 @@ class Otimizar(PageWindow):
     def showEvent(self, ev):
         self.layoutinfos = QVBoxLayout()
 
+        success = None
+
+        if Otimizacao.resultado['success'] == True:
+            success = QLabel('SUCESSO!')
+        else:
+            success = QLabel('FALHA!')
+
+        adjustlabel(success)
+        self.layoutinfos.addWidget(success)
+
         qntparametros = QLabel('Parametros selecionados:')
         adjustlabel(qntparametros)
         self.layoutinfos.addWidget(qntparametros)
@@ -349,7 +359,6 @@ class Otimizar(PageWindow):
         return QWidget.showEvent(self, ev)
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
-        print('Fechou')
         self.abrirpaginainicial()
 
     def abrirpaginainicial(self):
