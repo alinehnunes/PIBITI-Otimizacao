@@ -71,6 +71,7 @@ class Selecaoparametros(PageWindow):
 
 
 class LimiteParametros(PageWindow):
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.layoutprincipal = QVBoxLayout()
@@ -210,7 +211,7 @@ class SelecaoVariedades(PageWindow, Basedados):
         for i in range(self.listaselecionadas.count()):
             itematual = self.listaselecionadas.item(i).text()
             Otimizacao.addvariedade(self.listavariedades[itematual])
-        otimizar(Otimizacao)
+        Otimizacao.resultado = otimizar(Otimizacao)
 
     def goToLimiteParametros(self):
         self.goto("LimiteParametros")
@@ -269,6 +270,14 @@ class Otimizar(PageWindow):
 
     def showEvent(self, ev):
         self.layoutinfos = QVBoxLayout()
+
+        resultado_otm = QLabel('Resultado da Otimização:')
+        adjustlabel(resultado_otm)
+        self.layoutinfos.addWidget(resultado_otm)
+        custo = QLabel('custo:' + str(Otimizacao.resultado['custo']))
+        adjustbotao(custo)
+        self.layoutinfos.addWidget(custo)
+
         qntparametros = QLabel('Parametros selecionados:')
         adjustlabel(qntparametros)
         self.layoutinfos.addWidget(qntparametros)
@@ -281,6 +290,7 @@ class Otimizar(PageWindow):
                                    parlimitesup)
             adjustbotao(parametrosoti)
             self.layoutinfos.addWidget(parametrosoti)
+
         qntvariedades = QLabel('As variedades escolhidas foram:')
         adjustlabel(qntvariedades)
         self.layoutinfos.addWidget(qntvariedades)

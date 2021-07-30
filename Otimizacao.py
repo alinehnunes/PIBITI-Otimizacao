@@ -169,4 +169,27 @@ def otimizar(objeto_otimizacao):
 
     #função de otimização
     solucao = minimize(custo, x0, method='SLSQP', bounds=limites, constraints=restricoes)
-    print(solucao)
+
+    #Calculando o resultado
+    xf = solucao.x
+
+    custo = sum([(objeto_otimizacao.variedades[i].custo*xf[i]) for i in range(qtdvariedades)])
+    ph = sum([(objeto_otimizacao.variedades[i].ph*xf[i]) for i in range(qtdvariedades)])
+    pol = sum([(objeto_otimizacao.variedades[i].pol*xf[i]) for i in range(qtdvariedades)])
+    pureza = sum([(objeto_otimizacao.variedades[i].pureza*xf[i]) for i in range(qtdvariedades)])
+    atr = sum([(objeto_otimizacao.variedades[i].atr*xf[i]) for i in range(qtdvariedades)])
+    ar = sum([(objeto_otimizacao.variedades[i].ar*xf[i]) for i in range(qtdvariedades)])
+    fibra = sum([(objeto_otimizacao.variedades[i].fibra*xf[i]) for i in range(qtdvariedades)])
+
+    resultado = {'x': xf,
+                 'custo': custo, 
+                 'ph': ph,
+                 'pol': pol,
+                 'pureza': pureza,
+                 'atr': atr,
+                 'ar': ar,
+                 'fibra': fibra}
+
+    print(resultado['x'])
+
+    return resultado
