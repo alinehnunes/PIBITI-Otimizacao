@@ -144,13 +144,18 @@ class LimiteParametros(PageWindow):
         for i in range(len(Otimizacao.parametros)):
             limiteinf = self.layout2.itemAtPosition(i, 1).widget().text()
             limitesup = self.layout2.itemAtPosition(i, 2).widget().text()
-            if limiteinf == '':
-                limiteinf = -math.inf
-            if limitesup == '':
-                limitesup = math.inf
-            limiteinf = float(limiteinf)
-            limitesup = float(limitesup)
-            Otimizacao.parametros[i].setlimites(limiteinf, limitesup)
+            if limiteinf != '':
+                limiteinf = float(limiteinf)
+                Otimizacao.parametros[i].setlimiteInf(limiteinf)
+
+            if limitesup != '':
+                limitesup = float(limitesup)
+                Otimizacao.parametros[i].setlimiteSup(limitesup)
+            
+            #if limiteinf != '' and limitesup != '':
+            #    limiteinf = float(limiteinf)
+            #    limitesup = float(limitesup)
+            #    Otimizacao.parametros[i].setlimites(limiteinf, limitesup)
 
     def checarlimites(self):
         for i in range(len(Otimizacao.parametros)):
@@ -171,6 +176,16 @@ class LimiteParametros(PageWindow):
                     createmessage("Erro Matemático", f'Limite inferior do parâmetro {Otimizacao.parametros[i].nome} '
                                                      f'maior que o limite superior')
                     return False
+
+                print(f'Inf: {Otimizacao.parametros[i].limiteInf}')
+                print(f'Sup: {Otimizacao.parametros[i].limiteSup}')
+                
+                if Otimizacao.parametros[i].limiteInf > Otimizacao.parametros[i].limiteSup:
+                    print('entrou')
+                    createmessage("Erro Matemático", f'Limite inferior do parâmetro {Otimizacao.parametros[i].nome} '
+                                                     f'maior que o limite superior')
+                    return False
+
         return True
 
     def isvalid(self, resposta1, resposta2):

@@ -8,10 +8,39 @@ class Parametro:
         self.limiteInf = -inf
         self.limiteSup = inf
 
+        if self.nome == 'pH':
+            self.limiteInf = 4
+            self.limiteSup = 6
+
+        if self.nome == 'Pol':
+            self.limiteInf = 14
+            self.limiteSup = 100
+
+        if self.nome == 'Pureza':
+            self.limiteInf = 0.85
+            self.limiteSup = 1
+
+        if self.nome == 'ATR':
+            self.limiteInf = 0.15
+            self.limiteSup = 1
+
+        if self.nome == 'AR':
+            self.limiteInf = 0
+            self.limiteSup = 0.008
+
+        if self.nome == 'Pureza':
+            self.limiteInf = 0.11
+            self.limiteSup = 0.13
+
     def setlimites(self, linf, lsup):
         self.limiteInf = linf
         self.limiteSup = lsup
 
+    def setlimiteSup(self, lsup):
+        self.limiteSup = lsup
+
+    def setlimiteInf(self, linf):
+        self.limiteInf = linf
 
 class Otimizacao(mongoengine.Document):
     def __init__(self):
