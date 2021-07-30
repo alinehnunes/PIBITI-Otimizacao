@@ -39,7 +39,7 @@ class Selecaoparametros(PageWindow):
         self.layout1.setAlignment(Qt.AlignHCenter)
         self.layoutprincipal.addLayout(self.layout1)
         self.layout2 = QVBoxLayout()
-        parametros = ['Custo', 'pH', 'Pol', 'Pureza', 'ATR', 'AR', 'Fibra']
+        parametros = ['pH', 'Pol', 'Pureza', 'ATR', 'AR', 'Fibra']
         self.listabotoes = []
         for i in range(len(parametros)):
             botao = self.botaocheck(parametros[i])
@@ -144,18 +144,19 @@ class LimiteParametros(PageWindow):
         for i in range(len(Otimizacao.parametros)):
             limiteinf = self.layout2.itemAtPosition(i, 1).widget().text()
             limitesup = self.layout2.itemAtPosition(i, 2).widget().text()
-            if limiteinf != '':
-                limiteinf = float(limiteinf)
-                Otimizacao.parametros[i].setlimiteInf(limiteinf)
-
-            if limitesup != '':
-                limitesup = float(limitesup)
-                Otimizacao.parametros[i].setlimiteSup(limitesup)
             
-            #if limiteinf != '' and limitesup != '':
+            #if limiteinf != '':
             #    limiteinf = float(limiteinf)
+            #    Otimizacao.parametros[i].setlimiteInf(limiteinf)
+
+            #if limitesup != '':
             #    limitesup = float(limitesup)
-            #    Otimizacao.parametros[i].setlimites(limiteinf, limitesup)
+            #    Otimizacao.parametros[i].setlimiteSup(limitesup)
+            
+            if limiteinf != '' and limitesup != '':
+                limiteinf = float(limiteinf)
+                limitesup = float(limitesup)
+                Otimizacao.parametros[i].setlimites(limiteinf, limitesup)
 
     def checarlimites(self):
         for i in range(len(Otimizacao.parametros)):
@@ -291,65 +292,66 @@ class Otimizar(PageWindow):
         if Otimizacao.resultado['success'] == True:
             success = QLabel('SUCESSO!')
         else:
-            success = QLabel('FALHA!')
+            success = QLabel('               FALHA!\nO método não convergiu!')
 
         adjustlabel(success)
         self.layoutinfos.addWidget(success)
 
-        qntparametros = QLabel('Parametros selecionados:')
-        adjustlabel(qntparametros)
-        self.layoutinfos.addWidget(qntparametros)
-        for i in range(len(Otimizacao.parametros)):
-            par = Otimizacao.parametros[i]
-            parnome = str(par.nome)
-            parlimiteinf = str(par.limiteInf)
-            parlimitesup = str(par.limiteSup)
-            parametrosoti = QLabel(parnome + ':  Limite inferior:  ' + parlimiteinf + ', Limite superiror:  ' +
-                                   parlimitesup)
-            adjustbotao(parametrosoti)
-            self.layoutinfos.addWidget(parametrosoti)
+        if Otimizacao.resultado['success'] == True:
+            qntparametros = QLabel('Parametros selecionados:')
+            adjustlabel(qntparametros)
+            self.layoutinfos.addWidget(qntparametros)
+            for i in range(len(Otimizacao.parametros)):
+                par = Otimizacao.parametros[i]
+                parnome = str(par.nome)
+                parlimiteinf = str(par.limiteInf)
+                parlimitesup = str(par.limiteSup)
+                parametrosoti = QLabel(parnome + ':  Limite inferior:  ' + parlimiteinf + ', Limite superiror:  ' +
+                                       parlimitesup)
+                adjustbotao(parametrosoti)
+                self.layoutinfos.addWidget(parametrosoti)
 
-        qntvariedades = QLabel('Composições das variedades escolhidas:')
-        adjustlabel(qntvariedades)
-        self.layoutinfos.addWidget(qntvariedades)
-        for i in range(len(Otimizacao.variedades)):
-            var = Otimizacao.variedades[i]
-            variedadesoti = QLabel(var.nome + ': ' + str(round(Otimizacao.resultado['x'][i]*100,2)) + '%')
-            adjustbotao(variedadesoti)
-            self.layoutinfos.addWidget(variedadesoti)
+            qntvariedades = QLabel('Composições das variedades escolhidas:')
+            adjustlabel(qntvariedades)
+            self.layoutinfos.addWidget(qntvariedades)
+            for i in range(len(Otimizacao.variedades)):
+                var = Otimizacao.variedades[i]
+                variedadesoti = QLabel(var.nome + ': ' + str(round(Otimizacao.resultado['x'][i]*100,2)) + '%')
+                adjustbotao(variedadesoti)
+                self.layoutinfos.addWidget(variedadesoti)
 
-        #Resultado da otimizacão
-        parametros_resultado = QLabel('Valores dos parâmetros:')
-        adjustlabel(parametros_resultado)
-        self.layoutinfos.addWidget(parametros_resultado)
+            #Resultado da otimizacão
+            parametros_resultado = QLabel('Valores dos parâmetros:')
+            adjustlabel(parametros_resultado)
+            self.layoutinfos.addWidget(parametros_resultado)
 
-        custo = QLabel('Custo: R$' + str(round(Otimizacao.resultado['custo'],2)))
-        adjustbotao(custo)
-        self.layoutinfos.addWidget(custo)
+            custo = QLabel('Custo: R$' + str(round(Otimizacao.resultado['custo'],2)))
+            adjustbotao(custo)
+            self.layoutinfos.addWidget(custo)
 
-        ph = QLabel('pH: ' + str(round(Otimizacao.resultado['ph'],2)))
-        adjustbotao(ph)
-        self.layoutinfos.addWidget(ph)
+            ph = QLabel('pH: ' + str(round(Otimizacao.resultado['ph'],2)))
+            adjustbotao(ph)
+            self.layoutinfos.addWidget(ph)
 
-        pol = QLabel('Pol: ' + str(round(Otimizacao.resultado['pol'],2)))
-        adjustbotao(pol)
-        self.layoutinfos.addWidget(pol)
+            pol = QLabel('Pol: ' + str(round(Otimizacao.resultado['pol'],2)))
+            adjustbotao(pol)
+            self.layoutinfos.addWidget(pol)
 
-        pureza = QLabel('Pureza: ' + str(round(Otimizacao.resultado['pureza']*100,2)) + '%')
-        adjustbotao(pureza)
-        self.layoutinfos.addWidget(pureza)
+            pureza = QLabel('Pureza: ' + str(round(Otimizacao.resultado['pureza']*100,2)) + '%')
+            adjustbotao(pureza)
+            self.layoutinfos.addWidget(pureza)
 
-        atr = QLabel('ATR: ' + str(round(Otimizacao.resultado['atr']*100,2)) + '%')
-        adjustbotao(atr)
-        self.layoutinfos.addWidget(atr)
+            atr = QLabel('ATR: ' + str(round(Otimizacao.resultado['atr']*100,2)) + '%')
+            adjustbotao(atr)
+            self.layoutinfos.addWidget(atr)
 
-        ar = QLabel('AR: ' + str(round(Otimizacao.resultado['ar']*100,2)) + '%')
-        adjustbotao(ar)
-        self.layoutinfos.addWidget(ar)
+            ar = QLabel('AR: ' + str(round(Otimizacao.resultado['ar']*100,2)) + '%')
+            adjustbotao(ar)
+            self.layoutinfos.addWidget(ar)
 
-        fibra = QLabel('Fibra: ' + str(round(Otimizacao.resultado['fibra']*100,2)) + '%')
-        adjustbotao(fibra)
-        self.layoutinfos.addWidget(fibra)
+            fibra = QLabel('Fibra: ' + str(round(Otimizacao.resultado['fibra']*100,2)) + '%')
+            adjustbotao(fibra)
+            self.layoutinfos.addWidget(fibra)
 
 
         self.layoutinfos.setAlignment(Qt.AlignCenter)
