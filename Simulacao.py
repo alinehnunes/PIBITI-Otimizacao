@@ -271,13 +271,6 @@ class Otimizar(PageWindow):
     def showEvent(self, ev):
         self.layoutinfos = QVBoxLayout()
 
-        resultado_otm = QLabel('Resultado da Otimização:')
-        adjustlabel(resultado_otm)
-        self.layoutinfos.addWidget(resultado_otm)
-        custo = QLabel('custo:' + str(Otimizacao.resultado['custo']))
-        adjustbotao(custo)
-        self.layoutinfos.addWidget(custo)
-
         qntparametros = QLabel('Parametros selecionados:')
         adjustlabel(qntparametros)
         self.layoutinfos.addWidget(qntparametros)
@@ -299,6 +292,41 @@ class Otimizar(PageWindow):
             variedadesoti = QLabel(var.nome)
             adjustbotao(variedadesoti)
             self.layoutinfos.addWidget(variedadesoti)
+
+        #Resultado da otimizacão
+        parametros_resultado = QLabel('Valores do parâmetros:')
+        adjustlabel(parametros_resultado)
+        self.layoutinfos.addWidget(parametros_resultado)
+
+        custo = QLabel('Custo: R$' + str(round(Otimizacao.resultado['custo'],2)))
+        adjustbotao(custo)
+        self.layoutinfos.addWidget(custo)
+
+        ph = QLabel('pH: ' + str(round(Otimizacao.resultado['ph'],2)))
+        adjustbotao(ph)
+        self.layoutinfos.addWidget(ph)
+
+        pol = QLabel('Pol: ' + str(round(Otimizacao.resultado['pol'],2)))
+        adjustbotao(pol)
+        self.layoutinfos.addWidget(pol)
+
+        pureza = QLabel('Pureza: ' + str(round(Otimizacao.resultado['pureza']*100,2)) + '%')
+        adjustbotao(pureza)
+        self.layoutinfos.addWidget(pureza)
+
+        atr = QLabel('ATR: ' + str(round(Otimizacao.resultado['atr']*100,2)) + '%')
+        adjustbotao(atr)
+        self.layoutinfos.addWidget(atr)
+
+        ar = QLabel('AR: ' + str(round(Otimizacao.resultado['ar']*100,2)) + '%')
+        adjustbotao(ar)
+        self.layoutinfos.addWidget(ar)
+
+        fibra = QLabel('Fibra: ' + str(round(Otimizacao.resultado['fibra']*100,2)) + '%')
+        adjustbotao(fibra)
+        self.layoutinfos.addWidget(fibra)
+
+
         self.layoutinfos.setAlignment(Qt.AlignCenter)
         self.layout.addLayout(self.layoutinfos)
         self.layout.addLayout(self.sublayout)
