@@ -1,4 +1,4 @@
-import pandas as pd
+from CriadorDb import Database
 from PyQt5.QtWidgets import *
 from ParametrosOtimizacao import Otimizacao
 
@@ -10,16 +10,22 @@ class Basedados(QWidget):
 
         self.dataframe = None
         self.tablewidget = None
-        self.leituradados(nomearquivo, nomeplanilha)
+        # self.leituradados(nomearquivo, nomeplanilha)
+        self.leituradados()
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.openbase(self.dataframe))
         self.setLayout(self.layout)
         self.listavariedades = self.createVariedades(self.dataframe)
 
-    def leituradados(self, nomearquivo, nomepasta):
-        dados = pd.ExcelFile(nomearquivo)
-        dataframe = pd.read_excel(dados, nomepasta)
-        self.dataframe = dataframe
+    def leituradados(self):
+        d = Database()
+        d.connectdb()
+        self.dataframe = d.leituravariedades()
+
+    # def leituradados(self, nomearquivo, nomepasta):
+    #     dados = pd.ExcelFile(nomearquivo)
+    #     dataframe = pd.read_excel(dados, nomepasta)
+    #     self.dataframe = dataframe
 
     def openbase(self, dataframe):
 
@@ -53,7 +59,8 @@ class Basedados(QWidget):
 
 
 class Variedade:
-    def __init__(self, nome="", custo=0, ph=7, pol=0, pureza=1, atr=1, ar=1, fibra=1):
+    def __init__(self, id=0, nome="", custo=0, ph=7, pol=0, pureza=1, atr=1, ar=1, fibra=1):
+        self.id = id
         self.nome = nome
         self.custo = custo
         self.ph = ph
