@@ -182,13 +182,13 @@ def otimizar(objeto_otimizacao):
     fibra = sum([(objeto_otimizacao.variedades[i].fibra*xf[i]) for i in range(qtdvariedades)])
 
     resultado = {'x': xf,
-                 'custo': custo, 
-                 'ph': ph,
-                 'pol': pol,
-                 'pureza': pureza,
-                 'atr': atr,
-                 'ar': ar,
-                 'fibra': fibra,
+                 'Custo': custo,
+                 'pH': ph,
+                 'Pol': pol,
+                 'Pureza': pureza,
+                 'ATR': atr,
+                 'AR': ar,
+                 'Fibra': fibra,
                  'success': solucao.success}
                  
     return resultado

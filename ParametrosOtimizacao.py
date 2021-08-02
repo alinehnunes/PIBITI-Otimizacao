@@ -1,6 +1,6 @@
+import datetime
 from math import inf
-import mongoengine
-
+import datetime
 
 class Parametro:
     def __init__(self, n):
@@ -42,12 +42,14 @@ class Parametro:
     def setlimiteInf(self, linf):
         self.limiteInf = linf
 
-class Otimizacao(mongoengine.Document):
+class Otimizacao():
     def __init__(self):
+        self.nome = None
         self.parametros = []
         self.qtdvariedades = 0
         self.variedades = []
         self.resultado = None
+        self.time = None
 
     def addparametro(self, parametro):
         self.parametros.append(parametro)
@@ -58,3 +60,9 @@ class Otimizacao(mongoengine.Document):
     def getqtdvariedades(self):
         self.qtdvariedades = len(self.variedades)
         return self.qtdvariedades
+
+    def addnome(self, texto):
+        self.nome = str(texto)
+
+    def addtime(self):
+        self.time = datetime.datetime.now().toordinal()

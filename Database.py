@@ -21,6 +21,10 @@ class Database:
             self.createparametro()
             self.inserirvariedades()
             self.inserirparametros()
+            self.createvariedadesimulacao()
+            self.createparametrosimulacao()
+
+            self.conn.commit()
 
     def createsimulacao(self):
 
@@ -133,7 +137,7 @@ class Database:
             idsimulacao INTEGER NOT NULL,
             idparametro INTEGER NOT NULL,
             limitesup REAL NOT NULL,
-            limiteinf REAL NOT NULL
+            limiteinf REAL NOT NULL,
             PRIMARY KEY (idsimulacao, idparametro)
             );     
         """)
@@ -143,12 +147,37 @@ class Database:
         del dataframe['id']
         return dataframe
 
-# database = Database()
-# conn, cursor = database.createdb()
-#
-# conn.commit()
-#
-# for row in cursor.execute('SELECT * FROM Parametro;'):
-#     print(row)
-#
-# cursor.close()
+    def salvarsimulacacao(self, objotimizacao):
+        self.connectdb()
+        sql = """INSERT INTO Simulacao (Nome, Data) VALUES (?, ?)"""
+
+        self.cursor.execute(sql,[objotimizacao.nome, objotimizacao.time])
+
+        idsimulacao = self.cursor.lastrowid
+
+        # Insert de parametros
+        sql = """INSERT INTO Parametrosimulacao (Idsimulacao, Idparametro, limitesup, limiteinf) VALUES (?, ?, ?, ?)"""
+        for i in range(len(objotimizacao.parametros)):
+            print(len(objotimizacao.parametros))
+            idparametro = self.getidparametro(objotimizacao.parametros[i].nome)
+            self.cursor.execute(sql, [idsimulacao, idparametro, objotimizacao.parametros[i].limiteSup,
+                                      objotimizacao.parametros[i].limiteInf])
+
+        sql = """INSERT INTO Variedadesimulacao (Idsimulacao, Idvariedade) VALUES (?, ?)"""
+        for i in range(len(objotimizacao.variedaedes)):
+            idvariedade = self.getidvariedade(objotimizacao.variedaedes[i].nome)
+            self.cursor.execute(sql, [idsimulacao, idvariedade])
+
+        self.conn.commit()
+        self.conn.close()
+
+    def getidparametro(self, nome):
+        sql = """SELECT id FROM PARAMETRO WHERE NOME = ?"""
+        self.cursor.execute(sql, [nome])
+        id = self.cursor.fetchone()[0]
+        return id
+
+    def getidvariedade(self, nome):
+        sql = """SELECT id FROM VARIEDADE WHERE NOME = ?"""
+        self.cursor.execute(sql, [nome])
+        return self.cursor.fetchone()[0]
