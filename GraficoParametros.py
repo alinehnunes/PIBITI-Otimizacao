@@ -6,8 +6,8 @@ from PyQt5.QtChart import QChart, QChartView, QValueAxis, QBarCategoryAxis, QBar
 
 class GraficoParametro(Basedados):
 
-    def __init__(self, title, nomearquivo, nomeplanilha, parent=None):
-        super().__init__(nomearquivo, nomeplanilha, parent)
+    def __init__(self, title, parent=None):
+        super().__init__()
         self.x = ["Selecione o parâmetro a ser comparado na tabela acima"]
         self.y = [0]
 

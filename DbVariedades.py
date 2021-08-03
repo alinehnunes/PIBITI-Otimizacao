@@ -5,12 +5,11 @@ from ParametrosOtimizacao import Otimizacao
 
 class Basedados(QWidget):
 
-    def __init__(self, nomearquivo, nomeplanilha, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
 
         self.dataframe = None
         self.tablewidget = None
-        # self.leituradados(nomearquivo, nomeplanilha)
         self.leituradados()
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.openbase(self.dataframe))
@@ -22,10 +21,6 @@ class Basedados(QWidget):
         d.connectdb()
         self.dataframe = d.leituravariedades()
 
-    # def leituradados(self, nomearquivo, nomepasta):
-    #     dados = pd.ExcelFile(nomearquivo)
-    #     dataframe = pd.read_excel(dados, nomepasta)
-    #     self.dataframe = dataframe
 
     def openbase(self, dataframe):
 

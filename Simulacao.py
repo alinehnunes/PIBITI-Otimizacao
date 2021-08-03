@@ -3,17 +3,16 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QWidget
-
 import Returnimg
 from DbVariedades import Basedados
 from ParametrosOtimizacao import Otimizacao, Parametro
 from Otimizacao import otimizar
 from Database import Database
 import math
-from Returnimg import returnimg
 
 Database = Database()
 Otimizacao = Otimizacao()
+
 
 class PageWindow(QWidget):
     gotoSignal = QtCore.pyqtSignal(str)
@@ -207,8 +206,8 @@ class LimiteParametros(PageWindow):
 
 
 class SelecaoVariedades(PageWindow, Basedados):
-    def __init__(self, nomearquivo, nomeplanilha, parent=None):
-        super().__init__(nomearquivo, nomeplanilha, parent)
+    def __init__(self):
+        super().__init__()
         infoselecao = QLabel('Selecione as variedades escolhidas na tabela acima')
         self.sublayout = QHBoxLayout()
         self.layout.addWidget(infoselecao)
@@ -405,7 +404,7 @@ class Simulacao(QWidget):
 
         self.m_pages = {}
         self.register(Selecaoparametros(), "SelecaoParametros")
-        self.register(SelecaoVariedades("Base de dados inicial.xls", "Planilha1"), "SelecaoVariedades")
+        self.register(SelecaoVariedades(), "SelecaoVariedades")
         self.register(LimiteParametros(), "LimiteParametros")
         self.register(Otimizar(), "Otimizar")
 

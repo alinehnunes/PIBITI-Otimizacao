@@ -33,7 +33,8 @@ class Database:
         CREATE TABLE Simulacao (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             Nome TEXT NOT NULL,
-            Data INTEGER NOT NULL 
+            Data INTEGER NOT NULL,
+            Resultado TEXT NOT NULL 
             );     
         """)
 
@@ -79,7 +80,7 @@ class Database:
 
         self.cursor.execute("""
         INSERT INTO Variedade (Nome, Custo, pH, Pol, Pureza, ATR, AR, Fibra) 
-        VALUES ('Var6', 2.7, 7.2, 15, 0.86, 0.18, 0.0064, 0.1178) """)
+        VALUES ('Var6', 2.7, 4.3, 15, 0.86, 0.18, 0.0064, 0.1178) """)
 
     def createparametro(self):
 
@@ -102,11 +103,11 @@ class Database:
 
         self.cursor.execute("""
         INSERT INTO Parametro (Nome, LimiteInf, LimiteSup) 
-        VALUES ('pol', 14, 100) """)
+        VALUES ('Pol', 14, 100) """)
 
         self.cursor.execute("""
         INSERT INTO Parametro (Nome, LimiteInf, LimiteSup) 
-        VALUES ('pureza', 0.85, 1) """)
+        VALUES ('Pureza', 0.85, 1) """)
 
         self.cursor.execute("""
         INSERT INTO Parametro (Nome, LimiteInf, LimiteSup) 
@@ -153,9 +154,13 @@ class Database:
 
     def salvarsimulacacao(self, objotimizacao):
         self.connectdb()
-        sql = """INSERT INTO Simulacao (Nome, Data) VALUES (?, ?)"""
+        sql = """INSERT INTO Simulacao (Nome, Data, Resultado) VALUES (?, ?, ?)"""
 
-        self.cursor.execute(sql,[objotimizacao.nome, objotimizacao.time])
+        if objotimizacao.resultado['success'] == True:
+            resultado = 'Sucesso'
+        else:
+            resultado = 'Falha'
+        self.cursor.execute(sql,[objotimizacao.nome, objotimizacao.time, resultado])
 
         idsimulacao = self.cursor.lastrowid
 
@@ -178,15 +183,16 @@ class Database:
     def getidparametro(self, nome):
         sql = """SELECT id FROM PARAMETRO WHERE NOME = ?"""
         self.cursor.execute(sql, [nome])
-        id = ''
-        while True:
-            row = self.cursor.fetchone()
-            if row is None:
-                break
-            id = row[0]
+        row = self.cursor.fetchone()
+        id = row[0]
+        print(f'o valor final de id é: {id}')
         return id
 
     def getidvariedade(self, nome):
         sql = """SELECT id FROM VARIEDADE WHERE NOME = ?"""
         self.cursor.execute(sql, [nome])
         return self.cursor.fetchone()[0]
+
+
+#Database = Database()
+#Database.connectdb()
