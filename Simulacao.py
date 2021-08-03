@@ -303,32 +303,33 @@ class Otimizar(PageWindow):
             success = QLabel('               FALHA!\nO método não convergiu!')
 
         adjustlabel(success)
-        self.layoutinfos.addWidget(success)
+        qntparametros = QLabel('Parametros selecionados:')
+        adjustlabel(qntparametros)
+        self.layoutinfos.addWidget(qntparametros)
+        for i in range(len(Otimizacao.parametros)):
+            par = Otimizacao.parametros[i]
+            parnome = str(par.nome)
+            parlimiteinf = str(par.limiteInf)
+            parlimitesup = str(par.limiteSup)
+            parametrosoti = QLabel(parnome + ':  Limite inferior:  ' + parlimiteinf + ', Limite superiror:  ' +
+                                   parlimitesup)
+            adjustbotao(parametrosoti)
+            self.layoutinfos.addWidget(parametrosoti, 2, i)
+
+        qntvariedades = QLabel('Composições das variedades escolhidas:')
+        adjustlabel(qntvariedades)
+        self.layoutinfos.addWidget(qntvariedades)
+        for i in range(len(Otimizacao.variedades)):
+            var = Otimizacao.variedades[i]
+            variedadesoti = QLabel(var.nome + ': ' + str(round(Otimizacao.resultado['x'][i] * 100, 2)) + '%')
+            adjustbotao(variedadesoti)
+            self.layoutinfos.addWidget(variedadesoti, 4, i)
+
+        self.layoutinfos.addWidget(success, 5, 0)
 
         if Otimizacao.resultado['success'] == True:
-            qntparametros = QLabel('Parametros selecionados:')
-            adjustlabel(qntparametros)
-            self.layoutinfos.addWidget(qntparametros)
-            for i in range(len(Otimizacao.parametros)):
-                par = Otimizacao.parametros[i]
-                parnome = str(par.nome)
-                parlimiteinf = str(par.limiteInf)
-                parlimitesup = str(par.limiteSup)
-                parametrosoti = QLabel(parnome + ':  Limite inferior:  ' + parlimiteinf + ', Limite superiror:  ' +
-                                       parlimitesup)
-                adjustbotao(parametrosoti)
-                self.layoutinfos.addWidget(parametrosoti,2 ,i)
 
-            qntvariedades = QLabel('Composições das variedades escolhidas:')
-            adjustlabel(qntvariedades)
-            self.layoutinfos.addWidget(qntvariedades)
-            for i in range(len(Otimizacao.variedades)):
-                var = Otimizacao.variedades[i]
-                variedadesoti = QLabel(var.nome + ': ' + str(round(Otimizacao.resultado['x'][i]*100,2)) + '%')
-                adjustbotao(variedadesoti)
-                self.layoutinfos.addWidget(variedadesoti, 4, i)
-
-            #Resultado da otimizacão
+            # Resultado da otimizacão
             parametros_resultado = QLabel('Valores dos parâmetros:')
             adjustlabel(parametros_resultado)
             self.layoutinfos.addWidget(parametros_resultado)
@@ -361,17 +362,17 @@ class Otimizar(PageWindow):
             adjustbotao(fibra)
             self.layoutinfos.addWidget(fibra, 11, 2)
 
-        for i in range(len(Otimizacao.parametros)):
-            linf = Otimizacao.parametros[i].limiteInf
-            lsup = Otimizacao.parametros[i].limiteSup
-            nomepar = str(Otimizacao.parametros[i].nome)
-            resultado = Otimizacao.resultado[nomepar]
-            image = QLabel()
-            texto = "Resultado do parâmeetro " + nomepar
-            graf = Returnimg.returnimg(texto, linf, lsup, resultado)
-            image.setPixmap(graf)
-            adjustlabel(image)
-            self.layoutgrafs.addWidget(image,0,i)
+            for i in range(len(Otimizacao.parametros)):
+                linf = Otimizacao.parametros[i].limiteInf
+                lsup = Otimizacao.parametros[i].limiteSup
+                nomepar = str(Otimizacao.parametros[i].nome)
+                resultado = Otimizacao.resultado[nomepar]
+                image = QLabel()
+                texto = "Resultado do parâmeetro " + nomepar
+                graf = Returnimg.returnimg(texto, linf, lsup, resultado)
+                image.setPixmap(graf)
+                adjustlabel(image)
+                self.layoutgrafs.addWidget(image,0,i)
 
         self.layoutinfos.setAlignment(Qt.AlignCenter)
         self.layout.addLayout(self.layoutinfos)

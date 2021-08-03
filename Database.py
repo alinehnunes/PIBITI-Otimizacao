@@ -147,6 +147,10 @@ class Database:
         del dataframe['id']
         return dataframe
 
+    def leiturahistorico(self):
+        dataframe = pd.read_sql_query("SELECT * FROM Simulacao", self.conn)
+        return dataframe
+
     def salvarsimulacacao(self, objotimizacao):
         self.connectdb()
         sql = """INSERT INTO Simulacao (Nome, Data) VALUES (?, ?)"""
@@ -164,8 +168,8 @@ class Database:
                                       objotimizacao.parametros[i].limiteInf])
 
         sql = """INSERT INTO Variedadesimulacao (Idsimulacao, Idvariedade) VALUES (?, ?)"""
-        for i in range(len(objotimizacao.variedaedes)):
-            idvariedade = self.getidvariedade(objotimizacao.variedaedes[i].nome)
+        for i in range(len(objotimizacao.variedades)):
+            idvariedade = self.getidvariedade(objotimizacao.variedades[i].nome)
             self.cursor.execute(sql, [idsimulacao, idvariedade])
 
         self.conn.commit()
@@ -174,7 +178,12 @@ class Database:
     def getidparametro(self, nome):
         sql = """SELECT id FROM PARAMETRO WHERE NOME = ?"""
         self.cursor.execute(sql, [nome])
-        id = self.cursor.fetchone()[0]
+        id = ''
+        while True:
+            row = self.cursor.fetchone()
+            if row is None:
+                break
+            id = row[0]
         return id
 
     def getidvariedade(self, nome):
