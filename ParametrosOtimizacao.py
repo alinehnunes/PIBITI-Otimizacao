@@ -28,7 +28,7 @@ class Parametro:
             self.limiteInf = 0
             self.limiteSup = 0.008
 
-        if self.nome == 'Pureza':
+        if self.nome == 'Fibra':
             self.limiteInf = 0.11
             self.limiteSup = 0.13
 
