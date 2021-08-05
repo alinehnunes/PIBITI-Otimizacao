@@ -80,7 +80,7 @@ class Database:
 
         self.cursor.execute("""
         INSERT INTO Variedade (Nome, Custo, pH, Pol, Pureza, ATR, AR, Fibra) 
-        VALUES ('Var6', 2.7, 4.3, 15, 0.86, 0.18, 0.0064, 0.1178) """)
+        VALUES ('Var6', 3.2, 4.3, 15, 0.86, 0.18, 0.0064, 0.1178) """)
 
     def createparametro(self):
 
