@@ -283,16 +283,12 @@ class Otimizar(PageWindow):
         self.layoutinfos = QGridLayout()
         self.layoutgrafs = QGridLayout()
         self.sublayout = QHBoxLayout()
-        btnsalvar = QPushButton('Salvar Simulação')
-        btnsalvar.clicked.connect(self.salvarsimulacao)
-        btnvoltarinicio = QPushButton('Retornar ao início')
-        btnvoltarinicio.clicked.connect(self.close)
-        self.sublayout.addWidget(btnsalvar)
-        self.sublayout.addWidget(btnvoltarinicio)
+        btnavancar = QPushButton('Avançar')
+        btnavancar.clicked.connect(self.avancargrafs)
+        self.sublayout.addWidget(btnavancar)
         self.setLayout(self.layout)
 
     def showEvent(self, ev):
-
 
         success = None
 
@@ -361,24 +357,32 @@ class Otimizar(PageWindow):
             adjustbotao(fibra)
             self.layoutinfos.addWidget(fibra, 11, 2)
 
-            for i in range(len(Otimizacao.parametros)):
-                linf = Otimizacao.parametros[i].limiteInf
-                lsup = Otimizacao.parametros[i].limiteSup
-                nomepar = str(Otimizacao.parametros[i].nome)
-                resultado = Otimizacao.resultado[nomepar]
-                image = QLabel()
-                texto = "Resultado do parâmeetro " + nomepar
-                graf = Returnimg.returnimg(texto, linf, lsup, resultado)
-                image.setPixmap(graf)
-                adjustlabel(image)
-                self.layoutgrafs.addWidget(image,0,i)
-
         self.layoutinfos.setAlignment(Qt.AlignCenter)
         self.layout.addLayout(self.layoutinfos)
-        self.layout.addLayout(self.layoutgrafs)
         self.layout.addLayout(self.sublayout)
 
         return QWidget.showEvent(self, ev)
+
+    def avancargrafs(self):
+        self.goto('Gráficos')
+
+
+class Graficos(PageWindow):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        texto = QLabel('Resultados da otimização')
+        adjustlabel(texto)
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(texto)
+        self.layoutgrafs = QGridLayout()
+        self.sublayout = QHBoxLayout()
+        self.btnretornar = QPushButton('Retornar para resultados')
+        self.btnretornar.clicked.connect(self.retornar)
+        self.btnvoltarinicio = QPushButton('Retornar ao início')
+        self.btnvoltarinicio.clicked.connect(self.close)
+        self.btnsalvar = QPushButton('Salvar Simulação')
+        self.btnsalvar.clicked.connect(self.salvarsimulacao)
+        self.setLayout(self.layout)
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.abrirpaginainicial()
@@ -391,6 +395,35 @@ class Otimizar(PageWindow):
         Otimizacao.addtime()
         Otimizacao.nome = 'teste'
         Database.salvarsimulacacao(Otimizacao)
+
+    def retornar(self):
+        self.goto("Otimizar")
+
+    def showEvent(self, ev):
+        for i in range(len(Otimizacao.parametros)):
+            print('entrou no range')
+            linf = Otimizacao.parametros[i].limiteInf
+            lsup = Otimizacao.parametros[i].limiteSup
+            nomepar = str(Otimizacao.parametros[i].nome)
+            resultado = Otimizacao.resultado[nomepar]
+            image = QLabel()
+            texto = "Resultado do parâmetro " + nomepar
+            graf = Returnimg.returnimg(texto, linf, lsup, resultado)
+            image.setPixmap(graf)
+            col = i % 2
+            if i == 0 or i == 1:
+                lin = 0
+            elif i == 2 or i == 3:
+                lin = 1
+            else:
+                lin = 2
+            self.layoutgrafs.addWidget(image, lin, col)
+
+        self.sublayout.addWidget(self.btnvoltarinicio)
+        self.sublayout.addWidget(self.btnretornar)
+        self.sublayout.addWidget(self.btnsalvar)
+        self.layout.addLayout(self.layoutgrafs)
+        self.layout.addLayout(self.sublayout)
 
 
 class Simulacao(QWidget):
@@ -407,6 +440,7 @@ class Simulacao(QWidget):
         self.register(SelecaoVariedades(), "SelecaoVariedades")
         self.register(LimiteParametros(), "LimiteParametros")
         self.register(Otimizar(), "Otimizar")
+        self.register(Graficos(), "Gráficos")
 
         self.goto("SelecaoParametros")
         self.setLayout(self.layout)

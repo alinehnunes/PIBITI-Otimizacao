@@ -30,10 +30,10 @@ def returnimg(titulo, xmin, xmax, px):
     plt.vlines(sc.xmax, y - height / 2., y + height / 2.)
     plt.plot(sc.px, y, 'bo', ms=15, mfc='b')
 
-    plt.text(sc.xmin - 0.1, y, sc.xmin, horizontalalignment='right')
-    plt.text(sc.xmax + 0.1, y, sc.xmax, horizontalalignment='left')
+    plt.text(sc.xmin, y, sc.xmin, horizontalalignment='right')
+    plt.text(sc.xmax, y, sc.xmax, horizontalalignment='left')
 
-    plt.annotate('Valor Calculado:' + str(round(px,2)), (sc.px, y), xytext=(sc.px - 1, y + 0.3),
+    plt.annotate('Valor Calculado:' + str(round(px,2)), (sc.px, y), xytext=(sc.px, y + 0.3),
                  arrowprops=dict(facecolor='black'),
                  horizontalalignment='right')
     plt.axis('off')
