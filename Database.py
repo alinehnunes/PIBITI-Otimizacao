@@ -143,6 +143,17 @@ class Database:
             );     
         """)
 
+    def leituraparametros(self):
+        sql = "SELECT Nome FROM Parametro ORDER BY id"
+        self.cursor.execute(sql)
+        rows = self.cursor.fetchall()
+        parametros = []
+
+        for row in rows:
+            parametros.append(row[0])
+
+        return parametros
+
     def leituravariedades(self):
         dataframe = pd.read_sql_query("SELECT * FROM Variedade", self.conn)
         del dataframe['id']
@@ -154,20 +165,19 @@ class Database:
 
     def salvarsimulacacao(self, objotimizacao):
         self.connectdb()
-        sql = """INSERT INTO Simulacao (Nome, Data, Resultado) VALUES (?, ?, ?)"""
+        sql = """INSERT INTO Simulacao (Nome, Data, Resultado) VALUES (?, datetime('now', 'localtime'), ?)"""
 
         if objotimizacao.resultado['success'] == True:
             resultado = 'Sucesso'
         else:
             resultado = 'Falha'
-        self.cursor.execute(sql,[objotimizacao.nome, objotimizacao.time, resultado])
+        self.cursor.execute(sql,[objotimizacao.nome, resultado])
 
         idsimulacao = self.cursor.lastrowid
 
         # Insert de parametros
         sql = """INSERT INTO Parametrosimulacao (Idsimulacao, Idparametro, limitesup, limiteinf) VALUES (?, ?, ?, ?)"""
         for i in range(len(objotimizacao.parametros)):
-            print(len(objotimizacao.parametros))
             idparametro = self.getidparametro(objotimizacao.parametros[i].nome)
             self.cursor.execute(sql, [idsimulacao, idparametro, objotimizacao.parametros[i].limiteSup,
                                       objotimizacao.parametros[i].limiteInf])
@@ -185,7 +195,6 @@ class Database:
         self.cursor.execute(sql, [nome])
         row = self.cursor.fetchone()
         id = row[0]
-        print(f'o valor final de id é: {id}')
         return id
 
     def getidvariedade(self, nome):
@@ -194,5 +203,6 @@ class Database:
         return self.cursor.fetchone()[0]
 
 
-#Database = Database()
-#Database.connectdb()
+if __name__ == '__main__':
+    Database = Database()
+    Database.connectdb()

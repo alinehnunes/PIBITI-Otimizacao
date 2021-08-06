@@ -65,4 +65,4 @@ class Otimizacao():
         self.nome = str(texto)
 
     def addtime(self):
-        self.time = datetime.datetime.now().toordinal()
+        self.time = datetime.datetime.now()

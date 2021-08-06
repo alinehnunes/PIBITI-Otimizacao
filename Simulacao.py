@@ -1,3 +1,5 @@
+import datetime
+
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import Qt
@@ -43,7 +45,7 @@ class Selecaoparametros(PageWindow):
         self.layout1.setAlignment(Qt.AlignHCenter)
         self.layoutprincipal.addLayout(self.layout1)
         self.layout2 = QVBoxLayout()
-        parametros = ['pH', 'Pol', 'Pureza', 'ATR', 'AR', 'Fibra']
+        parametros = Database.leituraparametros()
         self.listabotoes = []
         for i in range(len(parametros)):
             botao = self.botaocheck(parametros[i])
@@ -107,8 +109,8 @@ class LimiteParametros(PageWindow):
             w.widget().deleteLater()
 
     def goToSelecaoParametros(self):
-        self.cleanlayout(self.layout2)
         self.goto("SelecaoParametros")
+        self.cleanlayout(self.layout2)
 
     def goToSelecaoVariedades(self):
         if self.checarlimites():
@@ -132,10 +134,10 @@ class LimiteParametros(PageWindow):
                             }
                         """)
             limiteinf = QLineEdit()
-            limiteinf.setPlaceholderText("Limite Inferior do parâmetro")
+            limiteinf.setPlaceholderText(f'Limite Inferior do parâmetro {Otimizacao.parametros[i].limiteInf}')
             adjustlineedit(limiteinf)
             limitesup = QLineEdit()
-            limitesup.setPlaceholderText("Limite Superior do parâmetro")
+            limitesup.setPlaceholderText(f'Limite Superior do parâmetro {Otimizacao.parametros[i].limiteSup}')
             adjustlineedit(limitesup)
             self.layout2.addWidget(nomevar, i, 0)
             self.layout2.addWidget(limiteinf, i, 1)
@@ -174,11 +176,7 @@ class LimiteParametros(PageWindow):
                                                      f'maior que o limite superior')
                     return False
 
-                #print(f'Inf: {Otimizacao.parametros[i].limiteInf}')
-                #print(f'Sup: {Otimizacao.parametros[i].limiteSup}')
-
                 if Otimizacao.parametros[i].limiteInf > Otimizacao.parametros[i].limiteSup:
-                    #print('entrou')
                     createmessage("Erro Matemático", f'Limite inferior do parâmetro {Otimizacao.parametros[i].nome} '
                                                      f'maior que o limite superior')
                     return False
@@ -375,6 +373,7 @@ class Graficos(PageWindow):
         adjustlabel(texto)
         self.layout = QVBoxLayout()
         self.layout.addWidget(texto)
+        self.layoutsalvar = QHBoxLayout()
         self.layoutgrafs = QGridLayout()
         self.sublayout = QHBoxLayout()
         self.btnretornar = QPushButton('Retornar para resultados')
@@ -386,21 +385,34 @@ class Graficos(PageWindow):
         self.setLayout(self.layout)
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
-        self.abrirpaginainicial()
-
-    def abrirpaginainicial(self):
         from OtimizacaoQT import w
-        w.openpaginainicial()
+        w.acaopaginainicial()
 
     def salvarsimulacao(self):
         Otimizacao.addtime()
-        Otimizacao.nome = 'teste'
+        Otimizacao.nome = self.layoutsalvar.itemAt(1).widget().text()
         Database.salvarsimulacacao(Otimizacao)
 
     def retornar(self):
         self.goto("Otimizar")
 
     def showEvent(self, ev):
+        lblnome = QLabel("Escolha o nome para salvar sua otimização:")
+        lblnome.setAlignment(Qt.AlignCenter)
+        lblnome.setStyleSheet("""
+                    QWidget {
+                        border: 1px solid black;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        padding: 5px;
+                        }
+                    """)
+        self.layoutsalvar.addWidget(lblnome)
+        tempo = str(datetime.datetime.now())
+        nomesimu = QLineEdit()
+        nomesimu.setText(f'Simulacao: {tempo}')
+        adjustlineedit(nomesimu)
+        self.layoutsalvar.addWidget(nomesimu)
         for i in range(len(Otimizacao.parametros)):
             linf = Otimizacao.parametros[i].limiteInf
             lsup = Otimizacao.parametros[i].limiteSup
@@ -422,6 +434,7 @@ class Graficos(PageWindow):
         self.sublayout.addWidget(self.btnvoltarinicio)
         self.sublayout.addWidget(self.btnretornar)
         self.sublayout.addWidget(self.btnsalvar)
+        self.layout.addLayout(self.layoutsalvar)
         self.layout.addLayout(self.layoutgrafs)
         self.layout.addLayout(self.sublayout)
 
@@ -429,6 +442,7 @@ class Graficos(PageWindow):
 class Simulacao(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        Database.connectdb()
 
         self.stacked_widget = QtWidgets.QStackedWidget()
 
