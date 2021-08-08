@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import QLabel, QVBoxLayout
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore
 from Database import Database
+from ParametrosOtimizacao import Otimizacao
+import datetime
 
 
 class Historicosimulacao(QWidget):
@@ -79,3 +81,15 @@ class Historicosimulacao(QWidget):
             return
         for item in deletelist:
             self.listaescolhida.takeItem(self.listaescolhida.row(item))
+
+# Ainda não implementado
+
+    def opensimu(self):
+        # from OtimizacaoQT import w
+        # objotimizacao = self.createobjotim()
+        # w.opennovasimulacao()
+        pass
+
+
+    def createobjotim(self):
+        pass

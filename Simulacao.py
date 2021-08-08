@@ -125,14 +125,7 @@ class LimiteParametros(PageWindow):
         for i in range(len(Otimizacao.parametros)):
             nomevar = QLabel(Otimizacao.parametros[i].nome)
             nomevar.setAlignment(Qt.AlignCenter)
-            nomevar.setStyleSheet("""
-                        QWidget {
-                            border: 1px solid black;
-                            border-radius: 5px;
-                            font-size: 14px;
-                            padding: 5px;
-                            }
-                        """)
+            adjustlabel(nomevar)
             limiteinf = QLineEdit()
             limiteinf.setPlaceholderText(f'Limite Inferior do parâmetro {Otimizacao.parametros[i].limiteInf}')
             adjustlineedit(limiteinf)
@@ -289,24 +282,25 @@ class Otimizar(PageWindow):
 
         adjustlabel(success)
 
-        self.layoutinfos.addWidget(success, 0, 0)
+        self.layoutinfos.addWidget(success, 0, 0, 1, len(Otimizacao.parametros))
 
         qntparametros = QLabel('Parametros selecionados:')
         adjustlabel(qntparametros)
-        self.layoutinfos.addWidget(qntparametros, 1, 0)
+        self.layoutinfos.addWidget(qntparametros, 1, 0, 1, len(Otimizacao.parametros))
         for i in range(len(Otimizacao.parametros)):
             par = Otimizacao.parametros[i]
             parnome = str(par.nome)
             parlimiteinf = str(par.limiteInf)
             parlimitesup = str(par.limiteSup)
-            parametrosoti = QLabel(parnome + ':  Limite inferior:  ' + parlimiteinf + ', Limite superior:  ' +
-                                   parlimitesup)
+            parametrosoti = QLabel(f"{parnome}:"
+                                   f" \nLimite inferior: {parlimiteinf}"
+                                   f" \nLimite superior: {parlimitesup}")
             adjustbotao(parametrosoti)
             self.layoutinfos.addWidget(parametrosoti, 2, i)
 
         qntvariedades = QLabel('Composições das variedades escolhidas:')
         adjustlabel(qntvariedades)
-        self.layoutinfos.addWidget(qntvariedades, 3, 0)
+        self.layoutinfos.addWidget(qntvariedades, 3, 0, 1, len(Otimizacao.variedades))
         for i in range(len(Otimizacao.variedades)):
             var = Otimizacao.variedades[i]
             variedadesoti = QLabel(var.nome + ': ' + str(round(Otimizacao.resultado['x'][i] * 100, 2)) + '%')
@@ -318,7 +312,7 @@ class Otimizar(PageWindow):
             # Resultado da otimizacão
             parametros_resultado = QLabel('Valores dos parâmetros:')
             adjustlabel(parametros_resultado)
-            self.layoutinfos.addWidget(parametros_resultado, 5, 0)
+            self.layoutinfos.addWidget(parametros_resultado, 5, 0, 1, 2)
 
             custo = QLabel('Custo: R$' + str(round(Otimizacao.resultado['Custo'],2)))
             adjustbotao(custo)
@@ -349,6 +343,7 @@ class Otimizar(PageWindow):
             self.layoutinfos.addWidget(fibra, 9, 1)
 
         self.layoutinfos.setAlignment(Qt.AlignCenter)
+        self.layout.setAlignment(Qt.AlignCenter)
         self.layout.addLayout(self.layoutinfos)
         self.layout.addLayout(self.sublayout)
 
@@ -373,7 +368,7 @@ class Graficos(PageWindow):
         adjustlabel(texto)
         self.layout = QVBoxLayout()
         self.layout.addWidget(texto)
-        self.layoutsalvar = QHBoxLayout()
+        self.layoutname = QHBoxLayout()
         self.layoutgrafs = QGridLayout()
         self.sublayout = QHBoxLayout()
         self.btnretornar = QPushButton('Retornar para resultados')
@@ -390,29 +385,39 @@ class Graficos(PageWindow):
 
     def salvarsimulacao(self):
         Otimizacao.addtime()
-        Otimizacao.nome = self.layoutsalvar.itemAt(1).widget().text()
+        Otimizacao.nome = self.layoutname.itemAt(1).widget().text()
         Database.salvarsimulacacao(Otimizacao)
 
     def retornar(self):
         self.goto("Otimizar")
+        self.cleanlayout(self.layoutname)
+
+    def cleanlayout(self, layout):
+        items = []
+        for i in range(layout.count()):
+            items.append(layout.itemAt(i))
+        for w in items:
+            w.widget().deleteLater()
 
     def showEvent(self, ev):
-        lblnome = QLabel("Escolha o nome para salvar sua otimização:")
-        lblnome.setAlignment(Qt.AlignCenter)
-        lblnome.setStyleSheet("""
-                    QWidget {
-                        border: 1px solid black;
-                        border-radius: 5px;
-                        font-size: 14px;
-                        padding: 5px;
-                        }
-                    """)
-        self.layoutsalvar.addWidget(lblnome)
-        tempo = str(datetime.datetime.now())
-        nomesimu = QLineEdit()
-        nomesimu.setText(f'Simulacao: {tempo}')
-        adjustlineedit(nomesimu)
-        self.layoutsalvar.addWidget(nomesimu)
+        self.sublayout.addWidget(self.btnvoltarinicio)
+        self.sublayout.addWidget(self.btnretornar)
+        if Otimizacao.historico:
+            lblnome = QLabel(f'Otimização escolhida: {Otimizacao.nome}')
+            lblnome.setAlignment(Qt.AlignCenter)
+            adjustlabel(lblnome)
+            self.layoutname.addWidget(lblnome)
+        else:
+            lblnome = QLabel("Escolha o nome para salvar sua otimização:")
+            lblnome.setAlignment(Qt.AlignCenter)
+            adjustlabel(lblnome)
+            self.layoutname.addWidget(lblnome)
+            tempo = str(datetime.datetime.now())
+            nomesimu = QLineEdit()
+            nomesimu.setText(f'Simulacao: {tempo}')
+            adjustlineedit(nomesimu)
+            self.layoutname.addWidget(nomesimu)
+            self.sublayout.addWidget(self.btnsalvar)
         for i in range(len(Otimizacao.parametros)):
             linf = Otimizacao.parametros[i].limiteInf
             lsup = Otimizacao.parametros[i].limiteSup
@@ -422,19 +427,15 @@ class Graficos(PageWindow):
             texto = "Resultado do parâmetro " + nomepar
             graf = Returnimg.returnimg(texto, linf, lsup, resultado)
             image.setPixmap(graf)
-            col = i % 2
-            if i == 0 or i == 1:
+            col = i % 3
+            if i == 0 or i == 1 or i == 2:
                 lin = 0
-            elif i == 2 or i == 3:
-                lin = 1
             else:
-                lin = 2
+                lin = 1
+
             self.layoutgrafs.addWidget(image, lin, col)
 
-        self.sublayout.addWidget(self.btnvoltarinicio)
-        self.sublayout.addWidget(self.btnretornar)
-        self.sublayout.addWidget(self.btnsalvar)
-        self.layout.addLayout(self.layoutsalvar)
+        self.layout.addLayout(self.layoutname)
         self.layout.addLayout(self.layoutgrafs)
         self.layout.addLayout(self.sublayout)
 
@@ -456,7 +457,11 @@ class Simulacao(QWidget):
         self.register(Otimizar(), "Otimizar")
         self.register(Graficos(), "Gráficos")
 
-        self.goto("SelecaoParametros")
+        if Otimizacao.historico:
+            self.goto("Otimizar")
+        else:
+            self.goto("SelecaoParametros")
+
         self.setLayout(self.layout)
 
     def register(self, widget, name):
@@ -499,6 +504,7 @@ def adjustlabel(lbl):
                         border: 1px solid black;
                         border-radius: 5px;
                         font-size: 14px;
+                        padding: 5px;
                         }
                     """)
 

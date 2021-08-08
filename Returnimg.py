@@ -24,19 +24,22 @@ def returnimg(titulo, xmin, xmax, px):
     height = 1
 
     plt.clf()
-    plt.title(titulo)
+    plt.title(titulo, fontsize=16)
     plt.hlines(y, sc.xmin, sc.xmax)
     plt.vlines(sc.xmin, y - height / 2., y + height / 2.)
     plt.vlines(sc.xmax, y - height / 2., y + height / 2.)
     plt.plot(sc.px, y, 'bo', ms=15, mfc='b')
+    plt.tick_params(left=False, right=False, labelleft=False,
+                    labelbottom=False, bottom=False)
+    ax = plt.gca()
+    ax.set_facecolor('xkcd:gray')
 
-    plt.text(sc.xmin, y, sc.xmin, horizontalalignment='right')
-    plt.text(sc.xmax, y, sc.xmax, horizontalalignment='left')
+    plt.text(sc.xmin, y, sc.xmin, horizontalalignment='right', fontsize=12)
+    plt.text(sc.xmax, y, sc.xmax, horizontalalignment='left', fontsize=12)
 
-    plt.annotate('Valor Calculado:' + str(round(px,2)), (sc.px, y), xytext=(sc.px, y + 0.3),
-                 arrowprops=dict(facecolor='black'),
-                 horizontalalignment='right')
-    plt.axis('off')
+    plt.annotate('Valor Calculado:' + str(round(px,2)), (sc.px, y), xytext=((sc.xmin+sc.xmax)/2, y + 0.3),
+                 fontsize=12, arrowprops=dict(facecolor='black'), horizontalalignment='right')
+    plt.axis()
 
     img = plt.gcf()
     canvas = FigureCanvasQTAgg(img)

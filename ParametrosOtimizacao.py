@@ -2,6 +2,7 @@ import datetime
 from math import inf
 import datetime
 
+
 class Parametro:
     def __init__(self, n):
         self.nome = n
@@ -42,6 +43,7 @@ class Parametro:
     def setlimiteInf(self, linf):
         self.limiteInf = linf
 
+
 class Otimizacao():
     def __init__(self):
         self.nome = None
@@ -50,6 +52,7 @@ class Otimizacao():
         self.variedades = []
         self.resultado = None
         self.time = None
+        self.historico = False
 
     def addparametro(self, parametro):
         self.parametros.append(parametro)
@@ -66,3 +69,7 @@ class Otimizacao():
 
     def addtime(self):
         self.time = datetime.datetime.now()
+
+    def changehistorico(self):
+        self.histórico = True
+
