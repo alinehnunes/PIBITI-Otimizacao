@@ -457,10 +457,11 @@ class Simulacao(QWidget):
         self.register(Otimizar(), "Otimizar")
         self.register(Graficos(), "Gráficos")
 
-        if Otimizacao.historico:
-            self.goto("Otimizar")
-        else:
-            self.goto("SelecaoParametros")
+        self.goto("SelecaoParametros")
+        # if Otimizacao.historico:
+        #     self.goto("Otimizar")
+        # else:
+        #     self.goto("SelecaoParametros")
 
         self.setLayout(self.layout)
 

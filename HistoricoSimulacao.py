@@ -24,6 +24,7 @@ class Historicosimulacao(QWidget):
         self.botaoapagar = QPushButton("Apagar simulação do Histórico")
         self.botaoapagar.clicked.connect(self.removeitem)
         self.botaoacessar = QPushButton("Acessar simulação")
+        #self.botaoacessar.clicked.connect(self.opensimu)
         self.layout.addWidget(self.openbase(self.dataframe))
         self.layout.addWidget(self.textoaux)
         self.layout2.addWidget(self.listaescolhida)
@@ -82,14 +83,7 @@ class Historicosimulacao(QWidget):
         for item in deletelist:
             self.listaescolhida.takeItem(self.listaescolhida.row(item))
 
-# Ainda não implementado
-
     def opensimu(self):
-        # from OtimizacaoQT import w
-        # objotimizacao = self.createobjotim()
-        # w.opennovasimulacao()
-        pass
+        itematual = self.listaescolhida.item().text()
+        objotimizacao = Database.leiturasimulacao(itematual)
 
-
-    def createobjotim(self):
-        pass

@@ -1,6 +1,8 @@
 import sqlite3
 import os
 import pandas as pd
+from ParametrosOtimizacao import Otimizacao, Parametro
+from Variedade import Variedade
 
 
 class Database:
@@ -34,7 +36,7 @@ class Database:
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             Nome TEXT NOT NULL,
             Data INTEGER NOT NULL,
-            Resultado TEXT NOT NULL 
+            Sucesso TEXT NOT NULL 
             );     
         """)
 
@@ -165,13 +167,13 @@ class Database:
 
     def salvarsimulacacao(self, objotimizacao):
         self.connectdb()
-        sql = """INSERT INTO Simulacao (Nome, Data, Resultado) VALUES (?, datetime('now', 'localtime'), ?)"""
+        sql = """INSERT INTO Simulacao (Nome, Data, Sucesso) VALUES (?, datetime('now', 'localtime'), ?)"""
 
         if objotimizacao.resultado['success'] == True:
-            resultado = 'Sucesso'
+            sucesso = 'Sucesso'
         else:
-            resultado = 'Falha'
-        self.cursor.execute(sql,[objotimizacao.nome, resultado])
+            sucesso = 'Falha'
+        self.cursor.execute(sql,[objotimizacao.nome, sucesso])
 
         idsimulacao = self.cursor.lastrowid
 
@@ -202,7 +204,54 @@ class Database:
         self.cursor.execute(sql, [nome])
         return self.cursor.fetchone()[0]
 
+    def leiturasimulacao(self, idsimulacao):
+        sql = """SELECT * FROM Simulacao s WHERE s.id = ? """
+        self.cursor.execute(sql, [idsimulacao])
+        row = self.cursor.fetchone()
+        simulacao = Otimizacao()
+        simulacao.nome = row[1]
+        simulacao.time = row[2]
+        simulacao.sucesso = row[3]
+        simulacao.historico = True
+        simulacao.resultado = None
+        simulacao.qtdvariedades = 0
+        simulacao.variedades = self.leituravariedadessimulacao(idsimulacao)
+        simulacao.parametros = self.leituraparametrossimulacao(idsimulacao)
+
+        return simulacao
+
+    def leituravariedadessimulacao(self, idsimulacao):
+        sql = """SELECT v.nome, v.custo, v.ph, v.pol, v.pureza, v.atr, v.ar, v.fibra  
+                  FROM Variedade v, 
+                       Variedadesimulacao vs 
+                 WHERE v.id = vs.idvariedade 
+                   and vs.idsimulacao = ?"""
+        self.cursor.execute(sql, [idsimulacao])
+        rows = self.cursor.fetchall()
+        variedades = []
+        for row in rows:
+            V = Variedade(*row)
+            variedades.append(V)
+        return variedades
+
+    def leituraparametrossimulacao(self, idsimulacao):
+        sql = """SELECT * 
+            FROM Parametro p, 
+                 Parametrosimulacao ps 
+           WHERE p.id = ps.idparametro 
+             and ps.idsimulacao = ?"""
+        self.cursor.execute(sql, [idsimulacao])
+        rows = self.cursor.fetchall()
+        parametros = []
+        for row in rows:
+            P = Parametro(row[1])
+            P.setlimites(row[2], row[3])
+            parametros.append(P)
+        return parametros
+
 
 if __name__ == '__main__':
     Database = Database()
     Database.connectdb()
+    Otim = Database.leiturasimulacao(3)
+    print(Otim.variedades)

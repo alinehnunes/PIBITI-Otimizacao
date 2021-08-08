@@ -18,16 +18,16 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Otimização Cana de Açúcar')
         self.setGeometry(400, 200, 600, 400)
 
-        self.paginainicialact = QAction('Pagina Inicial', self)
-        self.paginainicialact.triggered.connect(self.openpaginainicial)
-
-        self.acaopaginainicial()
+        #self.acaopaginainicial()
         self.createmenubar()
 
-    def acaopaginainicial(self):
-        self.paginainicialact.triggered.emit()
+    # def acaopaginainicial(self):
+    #     paginainicialact.triggered.emit()
 
     def createmenubar(self):
+        paginainicialact = QAction('Pagina Inicial', self)
+        paginainicialact.triggered.connect(self.openpaginainicial)
+
         simulacaoact = QAction('Nova Simulação', self)
         simulacaoact.triggered.connect(self.opennovasimulacao)
 
@@ -42,6 +42,7 @@ class MainWindow(QMainWindow):
 
         menubar = self.menuBar()
 
+        menubar.addAction(paginainicialact)
         menubar.addAction(simulacaoact)
         menubar.addAction(bancodedadosact)
         menubar.addAction(historicosimuact)

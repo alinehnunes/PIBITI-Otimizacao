@@ -52,6 +52,7 @@ class Otimizacao():
         self.variedades = []
         self.resultado = None
         self.time = None
+        self.sucesso = None
         self.historico = False
 
     def addparametro(self, parametro):
@@ -70,6 +71,4 @@ class Otimizacao():
     def addtime(self):
         self.time = datetime.datetime.now()
 
-    def changehistorico(self):
-        self.histórico = True
 
