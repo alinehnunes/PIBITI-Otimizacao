@@ -6,8 +6,11 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette
 from Simulacao import Simulacao, PaginaInicial
 from GraficoParametros import GraficoParametro
-from HistoricoSimulacao import Historicosimulacao
+from HistoricoSimulacao import Historico
 from Sobre import Sobre
+from ParametrosOtimizacao import Otimizacao
+
+#Otimizacao = Otimizacao()
 
 
 class MainWindow(QMainWindow):
@@ -16,13 +19,13 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle('Otimização Cana de Açúcar')
-        self.setGeometry(400, 200, 600, 400)
+        self.setGeometry(200, 100, 800, 600)
 
-        #self.acaopaginainicial()
+        t = PaginaInicial()
+        self.setCentralWidget(t)
+
         self.createmenubar()
 
-    # def acaopaginainicial(self):
-    #     paginainicialact.triggered.emit()
 
     def createmenubar(self):
         paginainicialact = QAction('Pagina Inicial', self)
@@ -52,8 +55,8 @@ class MainWindow(QMainWindow):
         t = PaginaInicial()
         self.setCentralWidget(t)
 
-    def opennovasimulacao(self):
-        t = Simulacao()
+    def opennovasimulacao(self, otm=None):
+        t = Simulacao(self, otm)
         self.setCentralWidget(t)
 
     def openbancodedados(self):
@@ -61,7 +64,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(t)
 
     def openhistoricosimu(self):
-        t = Historicosimulacao()
+        t = Historico()
         self.setCentralWidget(t)
 
     def opensobre(self):

@@ -44,7 +44,7 @@ class Parametro:
         self.limiteInf = linf
 
 
-class Otimizacao():
+class Otimizacao:
     def __init__(self):
         self.nome = None
         self.parametros = []
@@ -71,4 +71,11 @@ class Otimizacao():
     def addtime(self):
         self.time = datetime.datetime.now()
 
+    def copyotm(self, o):
+        self.nome = o.nome
+        self.time = o.time
+        self.sucesso = o.sucesso
+        self.parametros = o.parametros
+        self.qtdvariedades = o.qtdvariedades
+        self.variedades = o.variedades
 

@@ -3,24 +3,58 @@ import datetime
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget
 import Returnimg
 from DbVariedades import Basedados
 from ParametrosOtimizacao import Otimizacao, Parametro
 from Otimizacao import otimizar
 from Database import Database
+from PageWindow import PageWindow, adjustlabel, adjustbotao, adjustlineedit, createmessage
 import math
 
 Database = Database()
 Otimizacao = Otimizacao()
 
 
-class PageWindow(QWidget):
-    gotoSignal = QtCore.pyqtSignal(str)
+class Simulacao(QWidget):
+    def __init__(self, parent=None, otm=None):
+        super().__init__(parent)
+        Database.connectdb()
 
+        self.stacked_widget = QtWidgets.QStackedWidget()
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.stacked_widget)
+
+        self.m_pages = {}
+        self.register(Selecaoparametros(), "SelecaoParametros")
+        self.register(SelecaoVariedades(), "SelecaoVariedades")
+        self.register(LimiteParametros(), "LimiteParametros")
+        self.register(Otimizar(), "Otimizar")
+        self.register(Graficos(), "Gráficos")
+
+        # self.goto("SelecaoParametros")
+        if otm:
+            Otimizacao = otm
+            self.goto("Otimizar")
+        else:
+            self.goto("SelecaoParametros")
+
+        self.setLayout(self.layout)
+
+    def register(self, widget, name):
+        self.m_pages[name] = widget
+        self.stacked_widget.addWidget(widget)
+        if isinstance(widget, PageWindow):
+            widget.gotoSignal.connect(self.goto)
+
+    @QtCore.pyqtSlot(str)
     def goto(self, name):
-        self.gotoSignal.emit(name)
+        if name in self.m_pages:
+            widget = self.m_pages[name]
+            self.stacked_widget.setCurrentWidget(widget)
+            self.setWindowTitle(widget.windowTitle())
 
 
 class Selecaoparametros(PageWindow):
@@ -380,8 +414,7 @@ class Graficos(PageWindow):
         self.setLayout(self.layout)
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
-        from OtimizacaoQT import w
-        w.acaopaginainicial()
+        self.parent().parent().parent().openpaginainicial()
 
     def salvarsimulacao(self):
         Otimizacao.addtime()
@@ -440,102 +473,21 @@ class Graficos(PageWindow):
         self.layout.addLayout(self.sublayout)
 
 
-class Simulacao(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        Database.connectdb()
-
-        self.stacked_widget = QtWidgets.QStackedWidget()
-
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.stacked_widget)
-
-        self.m_pages = {}
-        self.register(Selecaoparametros(), "SelecaoParametros")
-        self.register(SelecaoVariedades(), "SelecaoVariedades")
-        self.register(LimiteParametros(), "LimiteParametros")
-        self.register(Otimizar(), "Otimizar")
-        self.register(Graficos(), "Gráficos")
-
-        self.goto("SelecaoParametros")
-        # if Otimizacao.historico:
-        #     self.goto("Otimizar")
-        # else:
-        #     self.goto("SelecaoParametros")
-
-        self.setLayout(self.layout)
-
-    def register(self, widget, name):
-        self.m_pages[name] = widget
-        self.stacked_widget.addWidget(widget)
-        if isinstance(widget, PageWindow):
-            widget.gotoSignal.connect(self.goto)
-
-    @QtCore.pyqtSlot(str)
-    def goto(self, name):
-        if name in self.m_pages:
-            widget = self.m_pages[name]
-            self.stacked_widget.setCurrentWidget(widget)
-            self.setWindowTitle(widget.windowTitle())
-
-
 class PaginaInicial(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.layout = QVBoxLayout()
-        texto = QLabel("Otimização em Python")
+        texto = QLabel("Otimização de misturas de Cana-de-Açúcar")
         adjustlabel(texto)
         texto.setAlignment(Qt.AlignCenter)
         img = QLabel()
         img.setFrameStyle(QFrame.Panel)
         img.setLineWidth(2)
         imagem = QPixmap("Cana2.jpg")
-        imagemcorrigida = imagem.scaled(640, 640, QtCore.Qt.KeepAspectRatio)
+        imagemcorrigida = imagem.scaled(840, 840, QtCore.Qt.KeepAspectRatio)
         img.setPixmap(imagemcorrigida)
         self.layout.addWidget(texto)
         self.layout.addWidget(img)
         self.layout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.layout)
 
-
-def adjustlabel(lbl):
-    lbl.setStyleSheet("""
-                        QWidget {
-                        font: Helvetica;
-                        border: 1px solid black;
-                        border-radius: 5px;
-                        font-size: 14px;
-                        padding: 5px;
-                        }
-                    """)
-
-
-def adjustlineedit(lineedit):
-    lineedit.setStyleSheet("""
-                            border: 1px solid black;
-                            border-radius: 15px;
-                            padding: 8px;
-                            background: gray;
-                            selection - background - color: darkgray;
-                            }
-                        """)
-
-
-def adjustbotao(botao):
-    botao.setStyleSheet("""
-        QWidget {
-            border: 2px solid white;
-            border-radius: 5px;
-            min-width: 200px;
-            max-width: 400px;
-            font-size: 14px;
-            padding: 5px;
-            }
-        """)
-
-
-def createmessage(titulo, message):
-    msg = QMessageBox()
-    msg.setWindowTitle(titulo)
-    msg.setText(message)
-    msg.exec_()
