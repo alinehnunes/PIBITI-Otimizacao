@@ -85,9 +85,9 @@ class Historicosimulacao(PageWindow):
         return QtCore.QObject.event(source, event)
 
     def addlist(self, row):
-        escolhido = self.tablewidget.item(row, 0).text()
-        self.listaescolhida.clear() # Verificar se esse método realmente limpa a lista
-        self.listaescolhida.addItem(escolhido)
+        escolhido = self.tablewidget.item(row, 1).text()
+        self.listaescolhida.clear()
+        self.listaescolhida.addItem(f' O nome da simulação escolhida é: {escolhido}')
 
     def leiturahistorico(self):
         d = Database()
@@ -125,13 +125,16 @@ class Historicosimulacao(PageWindow):
             self.listaescolhida.takeItem(self.listaescolhida.row(item))
 
     def opensimu(self):
-        itematual = int(self.listaescolhida.item(0).text())
-        d = Database()
-        d.connectdb()
-        o = Database.leiturasimulacao(d, itematual)
-        Otimizacao.copyotm(o)
-        Otimizacao.resultado = otimizar(Otimizacao)
-        self.gotoOtimizar()
+        if self.listaescolhida.item(0) == None:
+            createmessage("Adicionar Simulação", "Favor selecionar uma simulação para avançar")
+        else:
+            itematual = int(self.listaescolhida.item(0).text())
+            d = Database()
+            d.connectdb()
+            o = Database.leiturasimulacao(d, itematual)
+            Otimizacao.copyotm(o)
+            Otimizacao.resultado = otimizar(Otimizacao)
+            self.gotoOtimizar()
 
     def gotoOtimizar(self):
         self.goto("Otimizar")
